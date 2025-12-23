@@ -280,50 +280,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Skeleton Loading Card */
-.font-card.skeleton {
-  pointer-events: none;
-}
-
-.font-card.skeleton .font-preview-container {
-  background: #e8e8e8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.skeleton-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid #d0d0d0;
-  border-top-color: #c00;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.font-card.skeleton .font-name,
-.font-card.skeleton .font-category {
-  background: #e8e8e8;
-  color: transparent;
-  border-radius: 4px;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.font-card.skeleton .font-name {
-  width: 70%;
-  height: 18px;
-}
-
-.font-card.skeleton .font-category {
-  width: 40%;
-  height: 14px;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
 /* Empty State */
 .empty {
   grid-column: 1 / -1;
