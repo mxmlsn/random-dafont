@@ -282,7 +282,50 @@ function updateHistoryButtons() {
   const redoBtn = document.getElementById('redo');
 
   undoBtn.disabled = historyIndex <= 0;
-  redoBtn.disabled = historyIndex >= history.length - 1;
+
+  // Redo появляется только если мы откатились назад
+  const canRedo = historyIndex < history.length - 1 && historyIndex >= 0;
+  redoBtn.disabled = !canRedo;
+  redoBtn.style.display = canRedo || historyIndex > 0 ? 'flex' : 'none';
+}
+
+// ============================================
+// АНИМАЦИЯ БУКВ В ЛОГО
+// ============================================
+
+const fontFamilies = [
+  'Elliot',
+  'serif',
+  'sans-serif',
+  'monospace',
+  'cursive',
+  'fantasy'
+];
+
+let animationInterval = null;
+
+function startLetterAnimation() {
+  const letters = document.querySelectorAll('.letter');
+
+  animationInterval = setInterval(() => {
+    letters.forEach(letter => {
+      const randomFont = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
+      letter.style.fontFamily = randomFont;
+    });
+  }, 150);
+}
+
+function stopLetterAnimation() {
+  if (animationInterval) {
+    clearInterval(animationInterval);
+    animationInterval = null;
+  }
+
+  // Возвращаем все буквы к Elliot
+  const letters = document.querySelectorAll('.letter');
+  letters.forEach(letter => {
+    letter.style.fontFamily = 'Elliot';
+  });
 }
 
 // ============================================
@@ -290,33 +333,23 @@ function updateHistoryButtons() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  const countSlider = document.getElementById('count');
-  const countValue = document.getElementById('count-value');
   const discoverBtn = document.getElementById('discover');
   const undoBtn = document.getElementById('undo');
   const redoBtn = document.getElementById('redo');
   const status = document.getElementById('status');
 
-  // Загрузка сохранённого значения
-  const savedCount = localStorage.getItem('fontCount');
-  if (savedCount) {
-    countSlider.value = savedCount;
-    countValue.textContent = savedCount;
-  }
-
-  // Слайдер
-  countSlider.addEventListener('input', () => {
-    countValue.textContent = countSlider.value;
-    localStorage.setItem('fontCount', countSlider.value);
-  });
+  const count = 3; // Фиксированное количество шрифтов
 
   // Discover
   discoverBtn.addEventListener('click', async () => {
-    const count = parseInt(countSlider.value);
     discoverBtn.disabled = true;
+    discoverBtn.classList.add('loading');
     status.textContent = '';
     status.className = 'status';
     showLoading();
+
+    // Запускаем анимацию букв
+    startLetterAnimation();
 
     try {
       const fonts = [];
@@ -358,14 +391,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       updateHistoryButtons();
 
+      // Останавливаем анимацию букв
+      stopLetterAnimation();
+
       status.textContent = `Found ${fonts.length} font(s)`;
     } catch (e) {
+      stopLetterAnimation();
       status.textContent = 'Error: ' + e.message;
       status.className = 'status error';
       document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
     }
 
     discoverBtn.disabled = false;
+    discoverBtn.classList.remove('loading');
   });
 
   // Undo
