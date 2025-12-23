@@ -267,14 +267,70 @@ function renderGallery(fonts) {
   });
 }
 
-function showLoading() {
-  const gallery = document.getElementById('gallery');
-  gallery.innerHTML = `
-    <div class="loading">
-      <div class="loading-spinner"></div>
-      <div>Discovering fonts...</div>
+function createSkeletonCard() {
+  const card = document.createElement('div');
+  card.className = 'font-card skeleton';
+  card.innerHTML = `
+    <div class="font-preview-container">
+      <div class="skeleton-spinner"></div>
+    </div>
+    <div class="font-info">
+      <div class="font-details">
+        <div class="font-name">Loading</div>
+        <div class="font-category">Please wait</div>
+      </div>
     </div>
   `;
+  return card;
+}
+
+function initializeSkeletons(count) {
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+
+  for (let i = 0; i < count; i++) {
+    gallery.appendChild(createSkeletonCard());
+  }
+}
+
+function replaceSkeletonWithFont(index, font) {
+  const gallery = document.getElementById('gallery');
+  const skeletons = gallery.querySelectorAll('.skeleton');
+
+  if (index < skeletons.length) {
+    const card = document.createElement('div');
+    card.className = 'font-card';
+
+    const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
+
+    const downloadBtn = font.downloadUrl
+      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" onclick="event.stopPropagation()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </a>`
+      : '';
+
+    card.innerHTML = `
+      <div class="font-preview-container">
+        <img class="font-preview" src="${previewSrc}" alt="${font.name}">
+      </div>
+      <div class="font-info">
+        <div class="font-details">
+          <div class="font-name">${font.name}</div>
+          <div class="font-category">${font.category}</div>
+        </div>
+        ${downloadBtn}
+      </div>
+    `;
+
+    card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
+    card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
+
+    skeletons[index].replaceWith(card);
+  }
 }
 
 function updateHistoryButtons() {
@@ -282,7 +338,11 @@ function updateHistoryButtons() {
   const redoBtn = document.getElementById('redo');
 
   undoBtn.disabled = historyIndex <= 0;
-  redoBtn.disabled = historyIndex >= history.length - 1;
+
+  // Redo появляется только если мы откатились назад (historyIndex < последнего элемента)
+  const canRedo = historyIndex < history.length - 1 && historyIndex >= 0;
+  redoBtn.disabled = !canRedo;
+  redoBtn.style.display = canRedo || historyIndex > 0 ? 'flex' : 'none';
 }
 
 // ============================================
@@ -316,7 +376,9 @@ document.addEventListener('DOMContentLoaded', () => {
     discoverBtn.disabled = true;
     status.textContent = '';
     status.className = 'status';
-    showLoading();
+
+    // Показываем скелетоны вместо общего лоадера
+    initializeSkeletons(count);
 
     try {
       const fonts = [];
@@ -338,7 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
             status.textContent = `(${i + 1}/${count}) ${msg}`;
           });
           fonts.push(font);
-          renderGallery(fonts);
+          // Заменяем скелетон на реальную карточку
+          replaceSkeletonWithFont(i, font);
         } catch (e) {
           console.error(`Error with ${category.name}:`, e);
         }
