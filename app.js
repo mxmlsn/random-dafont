@@ -96,7 +96,8 @@ const ALL_CATEGORIES = [
 // СОСТОЯНИЕ
 // ============================================
 
-let history = []; // История выдач для Undo
+let history = []; // История выдач для Undo/Redo
+let historyIndex = -1; // Текущая позиция в истории
 const MAX_HISTORY = 10;
 
 // ============================================
@@ -276,9 +277,12 @@ function showLoading() {
   `;
 }
 
-function updateUndoButton() {
+function updateHistoryButtons() {
   const undoBtn = document.getElementById('undo');
-  undoBtn.disabled = history.length < 2;
+  const redoBtn = document.getElementById('redo');
+
+  undoBtn.disabled = historyIndex <= 0;
+  redoBtn.disabled = historyIndex >= history.length - 1;
 }
 
 // ============================================
@@ -290,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const countValue = document.getElementById('count-value');
   const discoverBtn = document.getElementById('discover');
   const undoBtn = document.getElementById('undo');
+  const redoBtn = document.getElementById('redo');
   const status = document.getElementById('status');
 
   // Загрузка сохранённого значения
@@ -343,12 +348,15 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error('Could not load any fonts');
       }
 
-      // Сохраняем в историю
+      // Сохраняем в историю (удаляем всё после текущей позиции)
+      history = history.slice(0, historyIndex + 1);
       history.push(fonts);
       if (history.length > MAX_HISTORY) {
         history.shift();
+      } else {
+        historyIndex++;
       }
-      updateUndoButton();
+      updateHistoryButtons();
 
       status.textContent = `Found ${fonts.length} font(s)`;
     } catch (e) {
@@ -362,12 +370,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Undo
   undoBtn.addEventListener('click', () => {
-    if (history.length < 2) return;
+    if (historyIndex <= 0) return;
 
-    history.pop(); // Удаляем текущую
-    const prevFonts = history[history.length - 1];
+    historyIndex--;
+    const prevFonts = history[historyIndex];
     renderGallery(prevFonts);
-    updateUndoButton();
-    status.textContent = 'Restored previous results';
+    updateHistoryButtons();
+    status.textContent = 'Undo';
+  });
+
+  // Redo
+  redoBtn.addEventListener('click', () => {
+    if (historyIndex >= history.length - 1) return;
+
+    historyIndex++;
+    const nextFonts = history[historyIndex];
+    renderGallery(nextFonts);
+    updateHistoryButtons();
+    status.textContent = 'Redo';
   });
 });
