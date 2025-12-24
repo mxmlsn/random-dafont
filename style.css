@@ -5,12 +5,14 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Arial Narrow", Arial, sans-serif;
   font-size: 14px;
   color: #333;
   background: #f5f5f5;
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+  top: -15vh;
 }
 
 /* Header */
@@ -51,6 +53,7 @@ body {
   max-width: 1100px;
   position: relative;
   z-index: 1;
+  margin-bottom: 60px;
 }
 
 .gallery.grid-6 {
@@ -65,6 +68,7 @@ body {
   border: 1px solid #CECECE;
   transition: background 0.15s, color 0.15s;
   cursor: pointer;
+  min-height: 200px;
 }
 
 .font-card:hover {
@@ -154,59 +158,17 @@ body {
   flex-shrink: 0;
 }
 
-/* Skeleton Loading */
+/* Skeleton Loading - Simplified */
 .font-card.skeleton {
   pointer-events: none;
-  background: #f8f8f8;
-  border-color: #e5e5e5;
-}
-
-.skeleton-preview {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-.skeleton-line {
-  height: 12px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 4px;
-}
-
-.skeleton-name {
-  width: 70%;
-  margin-bottom: 6px;
-}
-
-.skeleton-category {
-  width: 40%;
-  height: 10px;
-}
-
-.skeleton-download {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  background: #e8e8e8;
+  border-color: #d5d5d5;
 }
 
 /* Refresh Button */
 .btn-refresh {
   position: absolute;
-  bottom: -32px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 64px;
@@ -246,7 +208,7 @@ body {
 /* Icon buttons (undo/redo) */
 .controls-left {
   position: absolute;
-  bottom: -20px;
+  bottom: 8px;
   left: 0;
   display: flex;
   gap: 8px;
@@ -286,7 +248,7 @@ body {
 /* Count buttons (3/6) */
 .controls-right {
   position: absolute;
-  bottom: -20px;
+  bottom: 8px;
   right: 0;
   display: flex;
   gap: 8px;
@@ -342,6 +304,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  body {
+    top: -10vh;
+  }
+
   .main-wrapper {
     padding: 0 16px 80px;
     padding-top: 10vh;
@@ -358,6 +324,7 @@ body {
   .gallery {
     grid-template-columns: 1fr;
     gap: 16px;
+    margin-bottom: 50px;
   }
 
   .gallery.grid-6 {
@@ -365,11 +332,11 @@ body {
   }
 
   .controls-left {
-    bottom: -16px;
+    bottom: 6px;
   }
 
   .controls-right {
-    bottom: -16px;
+    bottom: 6px;
   }
 
   .btn-icon,
@@ -390,6 +357,6 @@ body {
   .btn-refresh {
     width: 56px;
     height: 56px;
-    bottom: -28px;
+    bottom: 18px;
   }
 }
