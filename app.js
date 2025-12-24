@@ -240,7 +240,7 @@ function renderGallery(fonts) {
     const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
 
     const downloadBtn = font.downloadUrl
-      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" onclick="event.stopPropagation()">
+      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" download>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -269,14 +269,33 @@ function renderGallery(fonts) {
   });
 }
 
-function showLoading() {
+function showLoading(count) {
   const gallery = document.getElementById('gallery');
-  gallery.innerHTML = `
-    <div class="loading">
-      <div class="loading-spinner"></div>
-      <div>Discovering fonts...</div>
-    </div>
-  `;
+  gallery.innerHTML = '';
+
+  // Update grid class
+  if (count === 6) {
+    gallery.classList.add('grid-6');
+  } else {
+    gallery.classList.remove('grid-6');
+  }
+
+  // Create skeleton cards
+  for (let i = 0; i < count; i++) {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'font-card skeleton';
+    skeleton.innerHTML = `
+      <div class="font-preview-container skeleton-preview"></div>
+      <div class="font-info">
+        <div class="font-details">
+          <div class="skeleton-line skeleton-name"></div>
+          <div class="skeleton-line skeleton-category"></div>
+        </div>
+        <div class="skeleton-download"></div>
+      </div>
+    `;
+    gallery.appendChild(skeleton);
+  }
 }
 
 function updateHistoryButtons() {
@@ -305,12 +324,9 @@ function updateCountButtons() {
 
 async function discoverFonts(count) {
   const discoverBtn = document.getElementById('discover');
-  const status = document.getElementById('status');
 
   discoverBtn.disabled = true;
-  status.textContent = '';
-  status.className = 'status';
-  showLoading();
+  showLoading(count);
 
   try {
     const fonts = [];
@@ -328,9 +344,7 @@ async function discoverFonts(count) {
       }
 
       try {
-        const font = await getRandomFontFromCategory(category, (msg) => {
-          status.textContent = `(${i + 1}/${count}) ${msg}`;
-        });
+        const font = await getRandomFontFromCategory(category, () => {});
         fonts.push(font);
         renderGallery(fonts);
       } catch (e) {
@@ -352,10 +366,8 @@ async function discoverFonts(count) {
     }
 
     updateHistoryButtons();
-    status.textContent = `Found ${fonts.length} font(s)`;
   } catch (e) {
-    status.textContent = 'Error: ' + e.message;
-    status.className = 'status error';
+    console.error('Error loading fonts:', e);
     document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
   }
 
@@ -371,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const undoBtn = document.getElementById('undo');
   const redoBtn = document.getElementById('redo');
   const countBtns = document.querySelectorAll('.count-btn');
-  const status = document.getElementById('status');
 
   // Load saved count
   const savedCount = localStorage.getItem('fontCount');
@@ -402,8 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const fonts = history[currentHistoryIndex];
       renderGallery(fonts);
       updateHistoryButtons();
-      status.textContent = 'Undo';
-      setTimeout(() => { status.textContent = ''; }, 2000);
     }
   });
 
@@ -414,8 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const fonts = history[currentHistoryIndex];
       renderGallery(fonts);
       updateHistoryButtons();
-      status.textContent = 'Redo';
-      setTimeout(() => { status.textContent = ''; }, 2000);
     }
   });
 

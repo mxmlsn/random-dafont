@@ -35,11 +35,11 @@ body {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px 120px;
+  padding: 0 24px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: calc(100vh - 200px);
+  padding-top: 15vh;
 }
 
 /* Gallery */
@@ -49,7 +49,6 @@ body {
   gap: 24px;
   width: 100%;
   max-width: 1100px;
-  margin-bottom: 60px;
   position: relative;
   z-index: 1;
 }
@@ -64,7 +63,7 @@ body {
   overflow: hidden;
   background: transparent;
   border: 1px solid #CECECE;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.15s, color 0.15s;
   cursor: pointer;
 }
 
@@ -89,7 +88,7 @@ body {
   overflow: hidden;
   background: #fafafa;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.15s;
 }
 
 .font-card:hover .font-preview-container {
@@ -110,7 +109,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  transition: border-color 0.3s;
+  transition: border-color 0.15s;
 }
 
 .font-card:hover .font-info {
@@ -131,13 +130,13 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
 
 .font-category {
   font-size: 12px;
   color: #888;
-  transition: color 0.3s;
+  transition: color 0.15s;
 }
 
 .download-btn {
@@ -151,14 +150,63 @@ body {
   border: 1px solid #CECECE;
   color: #555;
   text-decoration: none;
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   flex-shrink: 0;
+}
+
+/* Skeleton Loading */
+.font-card.skeleton {
+  pointer-events: none;
+  background: #f8f8f8;
+  border-color: #e5e5e5;
+}
+
+.skeleton-preview {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-name {
+  width: 70%;
+  margin-bottom: 6px;
+}
+
+.skeleton-category {
+  width: 40%;
+  height: 10px;
+}
+
+.skeleton-download {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Refresh Button */
 .btn-refresh {
   position: absolute;
-  bottom: 0;
+  bottom: -32px;
   left: 50%;
   transform: translateX(-50%);
   width: 64px;
@@ -198,16 +246,16 @@ body {
 /* Icon buttons (undo/redo) */
 .controls-left {
   position: absolute;
-  bottom: 80px;
+  bottom: -20px;
   left: 0;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   z-index: 5;
 }
 
 .btn-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #CECECE;
@@ -230,25 +278,30 @@ body {
   cursor: not-allowed;
 }
 
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* Count buttons (3/6) */
 .controls-right {
   position: absolute;
-  bottom: 80px;
+  bottom: -20px;
   right: 0;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   z-index: 5;
 }
 
 .count-btn {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #CECECE;
   color: #555;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
@@ -263,28 +316,6 @@ body {
   border-color: #c00;
 }
 
-/* Loading */
-.loading {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px;
-  color: #888;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #eee;
-  border-top-color: #c00;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 /* Empty State */
 .empty {
   grid-column: 1 / -1;
@@ -294,28 +325,8 @@ body {
   font-size: 16px;
 }
 
-/* Status */
+/* Status - Hidden */
 .status {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  color: #666;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 8px 16px;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  max-width: 90%;
-  text-align: center;
-}
-
-.status.error {
-  color: #c00;
-}
-
-.status:empty {
   display: none;
 }
 
@@ -332,7 +343,8 @@ body {
 
 @media (max-width: 768px) {
   .main-wrapper {
-    padding: 0 16px 100px;
+    padding: 0 16px 80px;
+    padding-top: 10vh;
   }
 
   .header {
@@ -346,7 +358,6 @@ body {
   .gallery {
     grid-template-columns: 1fr;
     gap: 16px;
-    margin-bottom: 50px;
   }
 
   .gallery.grid-6 {
@@ -354,21 +365,31 @@ body {
   }
 
   .controls-left {
-    bottom: 60px;
+    bottom: -16px;
   }
 
   .controls-right {
-    bottom: 60px;
+    bottom: -16px;
   }
 
   .btn-icon,
   .count-btn {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .btn-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .count-btn {
+    font-size: 14px;
   }
 
   .btn-refresh {
     width: 56px;
     height: 56px;
+    bottom: -28px;
   }
 }
