@@ -9,25 +9,46 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <h1 class="logo">Random<span>DaFont</span></h1>
-      <div class="controls">
-        <div class="slider-container">
-          <label for="count">Fonts:</label>
-          <input type="range" id="count" min="3" max="6" value="3" step="1">
-          <span id="count-value">3</span>
-        </div>
-        <button id="discover" class="btn-primary">Discover</button>
-        <button id="undo" class="btn-secondary" disabled>Undo</button>
-      </div>
-      <div id="status" class="status"></div>
-    </header>
+  <header class="header">
+    <h1 class="logo">Random<span>DaFont</span></h1>
+  </header>
 
+  <div class="main-wrapper">
     <main id="gallery" class="gallery">
-      <div class="empty">Click "Discover" to find random fonts</div>
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div>Loading fonts...</div>
+      </div>
     </main>
+
+    <button id="discover" class="btn-refresh" title="Refresh fonts">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+    </button>
+
+    <div class="controls-left">
+      <button id="undo" class="btn-icon" disabled title="Undo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 7v6h6"/>
+          <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+        </svg>
+      </button>
+      <button id="redo" class="btn-icon" disabled title="Redo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 7v6h-6"/>
+          <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="controls-right">
+      <button class="count-btn" data-count="3">3</button>
+      <button class="count-btn" data-count="6">6</button>
+    </div>
   </div>
+
+  <div id="status" class="status"></div>
 
   <script src="app.js"></script>
 </body>

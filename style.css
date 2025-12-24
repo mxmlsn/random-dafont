@@ -10,170 +10,77 @@ body {
   color: #333;
   background: #f5f5f5;
   min-height: 100vh;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
+  overflow-x: hidden;
 }
 
 /* Header */
 .header {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-  padding: 20px 24px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 32px 24px;
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #222;
+  display: inline-block;
 }
 
 .logo span {
   color: #c00;
 }
 
-/* Controls */
-.controls {
+/* Main wrapper */
+.main-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-}
-
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.slider-container label {
-  font-weight: 500;
-  color: #555;
-}
-
-#count {
-  width: 120px;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: #ddd;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-#count::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #c00;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 0.15s;
-}
-
-#count::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-#count::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #c00;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-#count-value {
-  font-weight: 600;
-  font-size: 16px;
-  color: #c00;
-  min-width: 20px;
-  text-align: center;
-}
-
-/* Buttons */
-.btn-primary, .btn-secondary {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.btn-primary {
-  background: #c00;
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background: #a00;
-}
-
-.btn-primary:active {
-  transform: scale(0.97);
-}
-
-.btn-primary:disabled {
-  background: #999;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #d0d0d0;
-}
-
-.btn-secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Status */
-.status {
-  margin-left: auto;
-  font-size: 13px;
-  color: #666;
-}
-
-.status.error {
-  color: #c00;
+  min-height: calc(100vh - 200px);
 }
 
 /* Gallery */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.gallery.grid-6 {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Font Card */
 .font-card {
   border-radius: 10px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s, transform 0.2s;
+  background: transparent;
+  border: 1px solid #CECECE;
+  transition: background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
 .font-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  transform: translateY(-3px);
+  background: #c00;
+}
+
+.font-card:hover .font-name,
+.font-card:hover .font-category {
+  color: #fff;
+}
+
+.font-card:hover .download-btn {
+  background: transparent;
+  border-color: #fff;
+  color: #fff;
 }
 
 .font-preview-container {
@@ -182,6 +89,11 @@ body {
   overflow: hidden;
   background: #fafafa;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+.font-card:hover .font-preview-container {
+  background: #b00;
 }
 
 .font-preview {
@@ -193,11 +105,16 @@ body {
 
 .font-info {
   padding: 12px 16px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #CECECE;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  transition: border-color 0.3s;
+}
+
+.font-card:hover .font-info {
+  border-top-color: rgba(255, 255, 255, 0.3);
 }
 
 .font-details {
@@ -214,11 +131,13 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color 0.3s;
 }
 
 .font-category {
   font-size: 12px;
   color: #888;
+  transition: color 0.3s;
 }
 
 .download-btn {
@@ -228,16 +147,120 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 6px;
-  background: #f0f0f0;
+  background: transparent;
+  border: 1px solid #CECECE;
   color: #555;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
   flex-shrink: 0;
 }
 
-.download-btn:hover {
+/* Refresh Button */
+.btn-refresh {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #c00;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
+}
+
+.btn-refresh:hover {
+  background: #a00;
+  transform: translateX(-50%) scale(1.05);
+}
+
+.btn-refresh:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+.btn-refresh:disabled {
+  background: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-refresh svg {
+  flex-shrink: 0;
+}
+
+/* Icon buttons (undo/redo) */
+.controls-left {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  display: flex;
+  gap: 12px;
+  z-index: 5;
+}
+
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #CECECE;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-icon:hover:not(:disabled) {
   background: #c00;
   color: #fff;
+  border-color: #c00;
+}
+
+.btn-icon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Count buttons (3/6) */
+.controls-right {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  display: flex;
+  gap: 12px;
+  z-index: 5;
+}
+
+.count-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #CECECE;
+  color: #555;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.count-btn:hover {
+  background: #f5f5f5;
+}
+
+.count-btn.active {
+  background: #c00;
+  color: #fff;
+  border-color: #c00;
 }
 
 /* Loading */
@@ -268,36 +291,84 @@ body {
   text-align: center;
   padding: 80px 20px;
   color: #888;
-  background: #fff;
-  border-radius: 10px;
   font-size: 16px;
 }
 
+/* Status */
+.status {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-width: 90%;
+  text-align: center;
+}
+
+.status.error {
+  color: #c00;
+}
+
+.status:empty {
+  display: none;
+}
+
 /* Responsive */
+@media (max-width: 1024px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery.grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
-  .container {
-    padding: 16px;
+  .main-wrapper {
+    padding: 0 16px 100px;
   }
 
   .header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-    padding: 16px;
+    padding: 24px 16px;
   }
 
-  .controls {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .status {
-    margin-left: 0;
-    text-align: center;
-    width: 100%;
+  .logo {
+    font-size: 24px;
   }
 
   .gallery {
     grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 50px;
+  }
+
+  .gallery.grid-6 {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-left {
+    bottom: 60px;
+  }
+
+  .controls-right {
+    bottom: 60px;
+  }
+
+  .btn-icon,
+  .count-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-refresh {
+    width: 56px;
+    height: 56px;
   }
 }

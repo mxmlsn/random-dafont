@@ -96,8 +96,10 @@ const ALL_CATEGORIES = [
 // СОСТОЯНИЕ
 // ============================================
 
-let history = []; // История выдач для Undo
+let history = [];
+let currentHistoryIndex = -1;
 const MAX_HISTORY = 10;
+let currentCount = 3;
 
 // ============================================
 // УТИЛИТЫ
@@ -119,14 +121,11 @@ async function fetchHTML(url) {
 // ============================================
 
 function parseMaxPage(html) {
-  // Ищем последнюю страницу в пагинации
-  // Паттерн: page=237">237</a> или page=237)[![]
   const match = html.match(/page=(\d+)[^>]*>\s*\d+\s*<\/a>\s*<a[^>]*page_suivante/i);
   if (match) {
     return parseInt(match[1]);
   }
 
-  // Альтернатива: ищем все page= и берём максимум
   const pageMatches = [...html.matchAll(/[?&]page=(\d+)/g)];
   let maxPage = 1;
   for (const m of pageMatches) {
@@ -141,7 +140,6 @@ function parseFontsFromPage(html) {
   const fonts = [];
   const seen = new Set();
 
-  // Ищем ссылки на шрифты: href="font-name.font"
   const regex = /href="([a-z0-9_-]+)\.font"/gi;
   let match;
 
@@ -169,7 +167,6 @@ async function getFontData(fontUrl) {
     const downloadMatch = html.match(/href="(\/\/dl\.dafont\.com\/dl\/\?f=[^"]+)"/);
     const downloadUrl = downloadMatch ? 'https:' + downloadMatch[1] : null;
 
-    // Попробуем извлечь нормальное название
     const nameMatch = html.match(/<title>([^<]+) Font/i);
     const name = nameMatch ? nameMatch[1].trim() : null;
 
@@ -224,6 +221,13 @@ function renderGallery(fonts) {
   const gallery = document.getElementById('gallery');
   gallery.innerHTML = '';
 
+  // Update grid class based on count
+  if (fonts.length === 6) {
+    gallery.classList.add('grid-6');
+  } else {
+    gallery.classList.remove('grid-6');
+  }
+
   if (fonts.length === 0) {
     gallery.innerHTML = '<div class="empty">No fonts found. Try again.</div>';
     return;
@@ -258,7 +262,6 @@ function renderGallery(fonts) {
       </div>
     `;
 
-    // Клик по карточке (кроме кнопки скачивания)
     card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
     card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
 
@@ -276,9 +279,87 @@ function showLoading() {
   `;
 }
 
-function updateUndoButton() {
+function updateHistoryButtons() {
   const undoBtn = document.getElementById('undo');
-  undoBtn.disabled = history.length < 2;
+  const redoBtn = document.getElementById('redo');
+
+  undoBtn.disabled = currentHistoryIndex <= 0;
+  redoBtn.disabled = currentHistoryIndex >= history.length - 1;
+}
+
+function updateCountButtons() {
+  const countBtns = document.querySelectorAll('.count-btn');
+  countBtns.forEach(btn => {
+    const count = parseInt(btn.dataset.count);
+    if (count === currentCount) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+// ============================================
+// DISCOVER LOGIC
+// ============================================
+
+async function discoverFonts(count) {
+  const discoverBtn = document.getElementById('discover');
+  const status = document.getElementById('status');
+
+  discoverBtn.disabled = true;
+  status.textContent = '';
+  status.className = 'status';
+  showLoading();
+
+  try {
+    const fonts = [];
+    const usedCategories = new Set();
+
+    for (let i = 0; i < count; i++) {
+      let category;
+      if (usedCategories.size < ALL_CATEGORIES.length) {
+        do {
+          category = ALL_CATEGORIES[randInt(0, ALL_CATEGORIES.length - 1)];
+        } while (usedCategories.has(category.url));
+        usedCategories.add(category.url);
+      } else {
+        category = ALL_CATEGORIES[randInt(0, ALL_CATEGORIES.length - 1)];
+      }
+
+      try {
+        const font = await getRandomFontFromCategory(category, (msg) => {
+          status.textContent = `(${i + 1}/${count}) ${msg}`;
+        });
+        fonts.push(font);
+        renderGallery(fonts);
+      } catch (e) {
+        console.error(`Error with ${category.name}:`, e);
+      }
+    }
+
+    if (fonts.length === 0) {
+      throw new Error('Could not load any fonts');
+    }
+
+    // Save to history (clear forward history if we're not at the end)
+    history = history.slice(0, currentHistoryIndex + 1);
+    history.push(fonts);
+    if (history.length > MAX_HISTORY) {
+      history.shift();
+    } else {
+      currentHistoryIndex++;
+    }
+
+    updateHistoryButtons();
+    status.textContent = `Found ${fonts.length} font(s)`;
+  } catch (e) {
+    status.textContent = 'Error: ' + e.message;
+    status.className = 'status error';
+    document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
+  }
+
+  discoverBtn.disabled = false;
 }
 
 // ============================================
@@ -286,91 +367,58 @@ function updateUndoButton() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  const countSlider = document.getElementById('count');
-  const countValue = document.getElementById('count-value');
   const discoverBtn = document.getElementById('discover');
   const undoBtn = document.getElementById('undo');
+  const redoBtn = document.getElementById('redo');
+  const countBtns = document.querySelectorAll('.count-btn');
   const status = document.getElementById('status');
 
-  // Загрузка сохранённого значения (с учётом нового диапазона 3-6)
+  // Load saved count
   const savedCount = localStorage.getItem('fontCount');
-  if (savedCount) {
-    const val = parseInt(savedCount);
-    if (val >= 3 && val <= 6) {
-      countSlider.value = savedCount;
-      countValue.textContent = savedCount;
-    }
+  if (savedCount && (savedCount === '3' || savedCount === '6')) {
+    currentCount = parseInt(savedCount);
   }
+  updateCountButtons();
 
-  // Слайдер
-  countSlider.addEventListener('input', () => {
-    countValue.textContent = countSlider.value;
-    localStorage.setItem('fontCount', countSlider.value);
+  // Count buttons
+  countBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentCount = parseInt(btn.dataset.count);
+      localStorage.setItem('fontCount', currentCount);
+      updateCountButtons();
+      discoverFonts(currentCount);
+    });
   });
 
-  // Discover
-  discoverBtn.addEventListener('click', async () => {
-    const count = parseInt(countSlider.value);
-    discoverBtn.disabled = true;
-    status.textContent = '';
-    status.className = 'status';
-    showLoading();
-
-    try {
-      const fonts = [];
-      const usedCategories = new Set();
-
-      for (let i = 0; i < count; i++) {
-        let category;
-        if (usedCategories.size < ALL_CATEGORIES.length) {
-          do {
-            category = ALL_CATEGORIES[randInt(0, ALL_CATEGORIES.length - 1)];
-          } while (usedCategories.has(category.url));
-          usedCategories.add(category.url);
-        } else {
-          category = ALL_CATEGORIES[randInt(0, ALL_CATEGORIES.length - 1)];
-        }
-
-        try {
-          const font = await getRandomFontFromCategory(category, (msg) => {
-            status.textContent = `(${i + 1}/${count}) ${msg}`;
-          });
-          fonts.push(font);
-          renderGallery(fonts);
-        } catch (e) {
-          console.error(`Error with ${category.name}:`, e);
-        }
-      }
-
-      if (fonts.length === 0) {
-        throw new Error('Could not load any fonts');
-      }
-
-      // Сохраняем в историю
-      history.push(fonts);
-      if (history.length > MAX_HISTORY) {
-        history.shift();
-      }
-      updateUndoButton();
-
-      status.textContent = `Found ${fonts.length} font(s)`;
-    } catch (e) {
-      status.textContent = 'Error: ' + e.message;
-      status.className = 'status error';
-      document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
-    }
-
-    discoverBtn.disabled = false;
+  // Discover button
+  discoverBtn.addEventListener('click', () => {
+    discoverFonts(currentCount);
   });
 
-  // Undo
+  // Undo button
   undoBtn.addEventListener('click', () => {
-    if (history.length < 2) return;
-
-    history.pop(); // Удаляем текущую
-    const prevFonts = history[history.length - 1];
-    renderGallery(prevFonts);
-    updateUndoButton();
-    status.textContent = 'Restored previous results';
+    if (currentHistoryIndex > 0) {
+      currentHistoryIndex--;
+      const fonts = history[currentHistoryIndex];
+      renderGallery(fonts);
+      updateHistoryButtons();
+      status.textContent = 'Undo';
+      setTimeout(() => { status.textContent = ''; }, 2000);
+    }
   });
+
+  // Redo button
+  redoBtn.addEventListener('click', () => {
+    if (currentHistoryIndex < history.length - 1) {
+      currentHistoryIndex++;
+      const fonts = history[currentHistoryIndex];
+      renderGallery(fonts);
+      updateHistoryButtons();
+      status.textContent = 'Redo';
+      setTimeout(() => { status.textContent = ''; }, 2000);
+    }
+  });
+
+  // Auto-load 3 fonts on page load
+  discoverFonts(3);
 });
