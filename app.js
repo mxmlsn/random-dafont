@@ -265,8 +265,25 @@ function renderGallery(fonts, totalCount) {
       </div>
     `;
 
-    card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
-    card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
+    // Click handlers
+    const previewContainer = card.querySelector('.font-preview-container');
+    const fontDetails = card.querySelector('.font-details');
+    const downloadButton = card.querySelector('.download-btn');
+
+    if (previewContainer) {
+      previewContainer.onclick = () => window.open(font.url, '_blank');
+    }
+
+    if (fontDetails) {
+      fontDetails.onclick = () => window.open(font.url, '_blank');
+    }
+
+    if (downloadButton) {
+      downloadButton.onclick = (e) => {
+        e.stopPropagation();
+        // Link handles navigation automatically
+      };
+    }
 
     // Replace skeleton at this index
     if (existingCards[index]) {

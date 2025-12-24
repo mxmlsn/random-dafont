@@ -18,7 +18,11 @@ body {
 /* Header */
 .header {
   text-align: center;
-  padding: 32px 24px;
+  padding: 32px 24px 24px;
+  position: sticky;
+  top: 0;
+  background: #f5f5f5;
+  z-index: 100;
 }
 
 .logo {
@@ -37,11 +41,12 @@ body {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px 60px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 15vh;
+  padding-top: 12vh;
+  min-height: 70vh;
 }
 
 /* Gallery */
@@ -53,7 +58,7 @@ body {
   max-width: 1100px;
   position: relative;
   z-index: 1;
-  margin-bottom: 60px;
+  margin-bottom: 70px;
 }
 
 .gallery.grid-6 {
@@ -69,6 +74,7 @@ body {
   transition: background 0.15s, color 0.15s;
   cursor: pointer;
   min-height: 200px;
+  position: relative;
 }
 
 .font-card:hover {
@@ -156,6 +162,8 @@ body {
   text-decoration: none;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 /* Skeleton Loading - Simplified */
@@ -168,7 +176,7 @@ body {
 /* Refresh Button */
 .btn-refresh {
   position: absolute;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   width: 64px;
@@ -208,7 +216,7 @@ body {
 /* Icon buttons (undo/redo) */
 .controls-left {
   position: absolute;
-  bottom: 8px;
+  bottom: 2px;
   left: 0;
   display: flex;
   gap: 8px;
@@ -248,7 +256,7 @@ body {
 /* Count buttons (3/6) */
 .controls-right {
   position: absolute;
-  bottom: 8px;
+  bottom: 2px;
   right: 0;
   display: flex;
   gap: 8px;
@@ -309,12 +317,13 @@ body {
   }
 
   .main-wrapper {
-    padding: 0 16px 80px;
-    padding-top: 10vh;
+    padding: 0 16px;
+    padding-top: 8vh;
+    min-height: 65vh;
   }
 
   .header {
-    padding: 24px 16px;
+    padding: 24px 16px 20px;
   }
 
   .logo {
@@ -324,7 +333,7 @@ body {
   .gallery {
     grid-template-columns: 1fr;
     gap: 16px;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
   }
 
   .gallery.grid-6 {
@@ -332,11 +341,11 @@ body {
   }
 
   .controls-left {
-    bottom: 6px;
+    bottom: 2px;
   }
 
   .controls-right {
-    bottom: 6px;
+    bottom: 2px;
   }
 
   .btn-icon,
@@ -357,6 +366,6 @@ body {
   .btn-refresh {
     width: 56px;
     height: 56px;
-    bottom: 18px;
+    bottom: 20px;
   }
 }
