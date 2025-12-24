@@ -96,8 +96,7 @@ const ALL_CATEGORIES = [
 // СОСТОЯНИЕ
 // ============================================
 
-let history = []; // История выдач для Undo/Redo
-let historyIndex = -1; // Текущая позиция в истории
+let history = []; // История выдач для Undo
 const MAX_HISTORY = 10;
 
 // ============================================
@@ -277,55 +276,9 @@ function showLoading() {
   `;
 }
 
-function updateHistoryButtons() {
+function updateUndoButton() {
   const undoBtn = document.getElementById('undo');
-  const redoBtn = document.getElementById('redo');
-
-  undoBtn.disabled = historyIndex <= 0;
-
-  // Redo появляется только если мы откатились назад
-  const canRedo = historyIndex < history.length - 1 && historyIndex >= 0;
-  redoBtn.disabled = !canRedo;
-  redoBtn.style.display = canRedo || historyIndex > 0 ? 'flex' : 'none';
-}
-
-// ============================================
-// АНИМАЦИЯ БУКВ В ЛОГО
-// ============================================
-
-const fontFamilies = [
-  'Elliot',
-  'serif',
-  'sans-serif',
-  'monospace',
-  'cursive',
-  'fantasy'
-];
-
-let animationInterval = null;
-
-function startLetterAnimation() {
-  const letters = document.querySelectorAll('.letter');
-
-  animationInterval = setInterval(() => {
-    letters.forEach(letter => {
-      const randomFont = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
-      letter.style.fontFamily = randomFont;
-    });
-  }, 150);
-}
-
-function stopLetterAnimation() {
-  if (animationInterval) {
-    clearInterval(animationInterval);
-    animationInterval = null;
-  }
-
-  // Возвращаем все буквы к Elliot
-  const letters = document.querySelectorAll('.letter');
-  letters.forEach(letter => {
-    letter.style.fontFamily = 'Elliot';
-  });
+  undoBtn.disabled = history.length < 2;
 }
 
 // ============================================
@@ -333,23 +286,35 @@ function stopLetterAnimation() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  const countSlider = document.getElementById('count');
+  const countValue = document.getElementById('count-value');
   const discoverBtn = document.getElementById('discover');
   const undoBtn = document.getElementById('undo');
-  const redoBtn = document.getElementById('redo');
   const status = document.getElementById('status');
 
-  const count = 3; // Фиксированное количество шрифтов
+  // Загрузка сохранённого значения (с учётом нового диапазона 3-6)
+  const savedCount = localStorage.getItem('fontCount');
+  if (savedCount) {
+    const val = parseInt(savedCount);
+    if (val >= 3 && val <= 6) {
+      countSlider.value = savedCount;
+      countValue.textContent = savedCount;
+    }
+  }
+
+  // Слайдер
+  countSlider.addEventListener('input', () => {
+    countValue.textContent = countSlider.value;
+    localStorage.setItem('fontCount', countSlider.value);
+  });
 
   // Discover
   discoverBtn.addEventListener('click', async () => {
+    const count = parseInt(countSlider.value);
     discoverBtn.disabled = true;
-    discoverBtn.classList.add('loading');
     status.textContent = '';
     status.className = 'status';
     showLoading();
-
-    // Запускаем анимацию букв
-    startLetterAnimation();
 
     try {
       const fonts = [];
@@ -381,50 +346,31 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error('Could not load any fonts');
       }
 
-      // Сохраняем в историю (удаляем всё после текущей позиции)
-      history = history.slice(0, historyIndex + 1);
+      // Сохраняем в историю
       history.push(fonts);
       if (history.length > MAX_HISTORY) {
         history.shift();
-      } else {
-        historyIndex++;
       }
-      updateHistoryButtons();
-
-      // Останавливаем анимацию букв
-      stopLetterAnimation();
+      updateUndoButton();
 
       status.textContent = `Found ${fonts.length} font(s)`;
     } catch (e) {
-      stopLetterAnimation();
       status.textContent = 'Error: ' + e.message;
       status.className = 'status error';
       document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
     }
 
     discoverBtn.disabled = false;
-    discoverBtn.classList.remove('loading');
   });
 
   // Undo
   undoBtn.addEventListener('click', () => {
-    if (historyIndex <= 0) return;
+    if (history.length < 2) return;
 
-    historyIndex--;
-    const prevFonts = history[historyIndex];
+    history.pop(); // Удаляем текущую
+    const prevFonts = history[history.length - 1];
     renderGallery(prevFonts);
-    updateHistoryButtons();
-    status.textContent = 'Undo';
-  });
-
-  // Redo
-  redoBtn.addEventListener('click', () => {
-    if (historyIndex >= history.length - 1) return;
-
-    historyIndex++;
-    const nextFonts = history[historyIndex];
-    renderGallery(nextFonts);
-    updateHistoryButtons();
-    status.textContent = 'Redo';
+    updateUndoButton();
+    status.textContent = 'Restored previous results';
   });
 });
