@@ -100,6 +100,7 @@ let history = [];
 let currentHistoryIndex = -1;
 const MAX_HISTORY = 10;
 let currentCount = 3;
+let logoAnimationInterval = null;
 
 // ============================================
 // UTILITIES
@@ -107,6 +108,41 @@ let currentCount = 3;
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ============================================
+// LOGO ANIMATION
+// ============================================
+
+function startLogoAnimation() {
+  const logoLetters = document.querySelectorAll('.logo-random span');
+  const totalVariations = 10; // font-var-0 to font-var-9
+
+  // Clear any existing interval
+  if (logoAnimationInterval) {
+    clearInterval(logoAnimationInterval);
+  }
+
+  // Animate each letter independently
+  logoAnimationInterval = setInterval(() => {
+    logoLetters.forEach(letter => {
+      // Remove all existing font variation classes
+      for (let i = 0; i < totalVariations; i++) {
+        letter.classList.remove(`font-var-${i}`);
+      }
+      // Add a random font variation class
+      const randomVariation = randInt(0, totalVariations - 1);
+      letter.classList.add(`font-var-${randomVariation}`);
+    });
+  }, 200); // Change fonts every 200ms
+}
+
+function stopLogoAnimation() {
+  if (logoAnimationInterval) {
+    clearInterval(logoAnimationInterval);
+    logoAnimationInterval = null;
+  }
+  // Letters freeze in their current state (keep the last applied class)
 }
 
 async function fetchHTML(url) {
@@ -325,6 +361,7 @@ async function discoverFonts(count) {
 
   discoverBtn.disabled = true;
   showLoading(count);
+  startLogoAnimation(); // Start logo animation while loading
 
   try {
     const fonts = [];
@@ -369,6 +406,7 @@ async function discoverFonts(count) {
     document.getElementById('gallery').innerHTML = '<div class="empty">Failed to load fonts. Try again.</div>';
   }
 
+  stopLogoAnimation(); // Stop logo animation when loading is complete
   discoverBtn.disabled = false;
 }
 

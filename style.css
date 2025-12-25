@@ -1,3 +1,10 @@
+/* Font Faces */
+@font-face {
+  font-family: 'Ellis';
+  src: url('ELLIS___.TTF') format('truetype');
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -29,11 +36,48 @@ body {
   font-size: 28px;
   font-weight: 700;
   color: #222;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 80px;
+  overflow: hidden;
 }
 
-.logo span {
+.logo-random {
+  display: flex;
+  gap: 2px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-random span {
+  display: inline-block;
+  transition: font-family 0.15s ease;
+  line-height: 1;
+}
+
+/* Font variations for animation */
+.logo-random .font-var-0 { font-family: 'Arial Black', sans-serif; font-weight: 900; }
+.logo-random .font-var-1 { font-family: 'Georgia', serif; font-style: italic; }
+.logo-random .font-var-2 { font-family: 'Courier New', monospace; font-weight: bold; }
+.logo-random .font-var-3 { font-family: 'Verdana', sans-serif; font-weight: 700; }
+.logo-random .font-var-4 { font-family: 'Times New Roman', serif; font-weight: 700; }
+.logo-random .font-var-5 { font-family: 'Impact', sans-serif; }
+.logo-random .font-var-6 { font-family: 'Comic Sans MS', cursive; font-weight: 700; }
+.logo-random .font-var-7 { font-family: 'Trebuchet MS', sans-serif; font-weight: 700; }
+.logo-random .font-var-8 { font-family: 'Lucida Console', monospace; font-weight: bold; }
+.logo-random .font-var-9 { font-family: 'Palatino', serif; font-weight: 700; }
+
+.logo-dafont {
+  font-family: 'Ellis', serif;
   color: #c00;
+  font-size: 32px;
+  line-height: 1;
+  height: 36px;
+  display: flex;
+  align-items: center;
 }
 
 /* Main wrapper */
@@ -339,6 +383,16 @@ body {
 
   .logo {
     font-size: 24px;
+    height: 70px;
+  }
+
+  .logo-random {
+    height: 32px;
+  }
+
+  .logo-dafont {
+    font-size: 28px;
+    height: 32px;
   }
 
   .gallery {
