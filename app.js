@@ -501,75 +501,13 @@ function initPosterGallery() {
   // Open modal
   submitPosterBtn.addEventListener('click', (e) => {
     e.preventDefault();
-
-    const infoCard = document.querySelector('.info-card');
-    const modalContent = modal.querySelector('.modal-content');
-
-    // Get info card position
-    const rect = infoCard.getBoundingClientRect();
-
-    // Set initial position and size to match info card
-    modalContent.style.position = 'fixed';
-    modalContent.style.top = rect.top + 'px';
-    modalContent.style.left = rect.left + 'px';
-    modalContent.style.width = rect.width + 'px';
-    modalContent.style.height = rect.height + 'px';
-    modalContent.style.background = '#c00';
-    modalContent.style.transform = 'rotate(-2deg)';
-    modalContent.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-    modalContent.style.opacity = '0';
-
-    // Show modal
     modal.classList.add('active');
-
-    // Trigger animation
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        modalContent.style.opacity = '1';
-        modalContent.style.position = 'relative';
-        modalContent.style.top = '0';
-        modalContent.style.left = '0';
-        modalContent.style.width = '';
-        modalContent.style.height = '';
-        modalContent.style.background = '';
-        modalContent.style.transform = 'rotate(0deg)';
-      });
-    });
   });
 
   // Close modal functions
   function closeModal() {
-    const modalContent = modal.querySelector('.modal-content');
-    const infoCard = document.querySelector('.info-card');
-    const rect = infoCard.getBoundingClientRect();
-
-    // Animate back to info card
-    modalContent.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-    modalContent.style.position = 'fixed';
-    modalContent.style.top = rect.top + 'px';
-    modalContent.style.left = rect.left + 'px';
-    modalContent.style.width = rect.width + 'px';
-    modalContent.style.height = rect.height + 'px';
-    modalContent.style.background = '#c00';
-    modalContent.style.transform = 'rotate(-2deg)';
-    modalContent.style.opacity = '0';
-
-    // Wait for animation to complete
-    setTimeout(() => {
-      // Reset inline styles
-      modalContent.style.position = '';
-      modalContent.style.top = '';
-      modalContent.style.left = '';
-      modalContent.style.width = '';
-      modalContent.style.height = '';
-      modalContent.style.background = '';
-      modalContent.style.transform = '';
-      modalContent.style.transition = '';
-      modalContent.style.opacity = '';
-
-      modal.classList.remove('active');
-      resetForm();
-    }, 400);
+    modal.classList.remove('active');
+    resetForm();
   }
 
   modalClose.addEventListener('click', closeModal);
@@ -907,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const maxScroll = 40;
-      scrollOffset = Math.min(scrollY * 0.05, maxScroll);
+      scrollOffset = Math.min(scrollY * 0.2, maxScroll);
 
       infoCard.style.setProperty('--scroll-offset', `${scrollOffset}px`);
     });
