@@ -5,6 +5,66 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'CalligraphyHandMade';
+  src: url('random-fonts/CalligraphyHandMade-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CrayonSketches';
+  src: url('random-fonts/CrayonSketches.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fluid';
+  src: url('random-fonts/FLUID-LI.TTF') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Horses';
+  src: url('random-fonts/Horses 1.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Humna';
+  src: url('random-fonts/Humna.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KremlinKourier';
+  src: url('random-fonts/Kremlin Kourier II Bold.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SportViper';
+  src: url('random-fonts/SPORTVIPER.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Adorable';
+  src: url('random-fonts/acsf-adorable-4pt-light.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AhabeshaTypewriter';
+  src: url('random-fonts/ahabesha\'stypewriter.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MeyneTextur';
+  src: url('random-fonts/meyne_textur.ttf') format('truetype');
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -59,16 +119,16 @@ body {
 }
 
 /* Font variations for animation */
-.logo-random .font-var-0 { font-family: 'Arial Black', sans-serif; font-weight: 900; }
-.logo-random .font-var-1 { font-family: 'Georgia', serif; font-style: italic; }
-.logo-random .font-var-2 { font-family: 'Courier New', monospace; font-weight: bold; }
-.logo-random .font-var-3 { font-family: 'Verdana', sans-serif; font-weight: 700; }
-.logo-random .font-var-4 { font-family: 'Times New Roman', serif; font-weight: 700; }
-.logo-random .font-var-5 { font-family: 'Impact', sans-serif; }
-.logo-random .font-var-6 { font-family: 'Comic Sans MS', cursive; font-weight: 700; }
-.logo-random .font-var-7 { font-family: 'Trebuchet MS', sans-serif; font-weight: 700; }
-.logo-random .font-var-8 { font-family: 'Lucida Console', monospace; font-weight: bold; }
-.logo-random .font-var-9 { font-family: 'Palatino', serif; font-weight: 700; }
+.logo-random .font-var-0 { font-family: 'CalligraphyHandMade', cursive; }
+.logo-random .font-var-1 { font-family: 'CrayonSketches', cursive; }
+.logo-random .font-var-2 { font-family: 'Fluid', sans-serif; }
+.logo-random .font-var-3 { font-family: 'Horses', fantasy; }
+.logo-random .font-var-4 { font-family: 'Humna', sans-serif; }
+.logo-random .font-var-5 { font-family: 'KremlinKourier', sans-serif; }
+.logo-random .font-var-6 { font-family: 'SportViper', sans-serif; }
+.logo-random .font-var-7 { font-family: 'Adorable', sans-serif; }
+.logo-random .font-var-8 { font-family: 'AhabeshaTypewriter', monospace; }
+.logo-random .font-var-9 { font-family: 'MeyneTextur', serif; }
 
 .logo-dafont {
   font-family: 'Ellis', serif;
