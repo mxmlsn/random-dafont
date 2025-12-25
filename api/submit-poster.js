@@ -10,6 +10,8 @@ export default async function handler(req, res) {
   const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
   const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
+  const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'Supabase not configured' });
@@ -80,7 +82,7 @@ export default async function handler(req, res) {
       cleanInstagram = '@' + cleanInstagram;
     }
 
-    // Insert poster record into Supabase database
+    // Insert poster record into Supabase database and get the ID
     const insertResponse = await fetch(
       `${supabaseUrl}/rest/v1/posters`,
       {
@@ -89,7 +91,7 @@ export default async function handler(req, res) {
           'apikey': supabaseKey,
           'Authorization': `Bearer ${supabaseKey}`,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=representation'
         },
         body: JSON.stringify({
           nickname: nickname.trim(),
@@ -106,9 +108,55 @@ export default async function handler(req, res) {
       throw new Error('Failed to save poster data');
     }
 
+    const insertedData = await insertResponse.json();
+    const posterId = insertedData[0]?.id;
+
+    // Send Telegram notification if configured
+    if (telegramBotToken && telegramChatId && posterId) {
+      await sendTelegramNotification(
+        telegramBotToken,
+        telegramChatId,
+        posterId,
+        nickname.trim(),
+        cleanInstagram,
+        imageUrl
+      );
+    }
+
     res.status(201).json({ success: true, message: 'Poster submitted for review' });
   } catch (error) {
     console.error('Error submitting poster:', error);
     res.status(500).json({ error: error.message || 'Failed to submit poster' });
+  }
+}
+
+// Send poster notification to Telegram with moderation buttons
+async function sendTelegramNotification(token, chatId, posterId, nickname, instagram, imageUrl) {
+  try {
+    const caption = `🎨 New poster submission!\n\n` +
+      `👤 Author: ${nickname}\n` +
+      (instagram ? `📷 Instagram: ${instagram}\n` : '') +
+      `\n🆔 ID: ${posterId}`;
+
+    const keyboard = {
+      inline_keyboard: [[
+        { text: '✅ Approve', callback_data: `approve:${posterId}` },
+        { text: '❌ Reject', callback_data: `reject:${posterId}` }
+      ]]
+    };
+
+    await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        photo: imageUrl,
+        caption: caption,
+        reply_markup: keyboard
+      })
+    });
+  } catch (error) {
+    console.error('Failed to send Telegram notification:', error);
+    // Don't throw - telegram notification is not critical
   }
 }
