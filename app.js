@@ -243,7 +243,7 @@ function renderGallery(fonts, totalCount) {
     const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
 
     const downloadBtn = font.downloadUrl
-      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" download>
+      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" onclick="event.stopPropagation()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -265,15 +265,9 @@ function renderGallery(fonts, totalCount) {
       </div>
     `;
 
-    // Click on card opens font page (except download button)
-    card.onclick = (e) => {
-      // If clicked on download button or its children, let the <a> handle it
-      if (e.target.closest('.download-btn')) {
-        e.stopPropagation();
-        return;
-      }
-      window.open(font.url, '_blank');
-    };
+    // Click handlers - separate for preview and details (not entire card)
+    card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
+    card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
 
     // Replace skeleton at this index
     if (existingCards[index]) {
