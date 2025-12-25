@@ -108,13 +108,13 @@ body {
 }
 
 .logo {
-  font-size: 45px;
+  font-size: 55px;
   font-weight: 700;
   color: #222;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 7px;
   height: 80px;
   overflow: visible;
 }
@@ -148,7 +148,7 @@ body {
 .logo-dafont {
   font-family: 'Ellis', serif;
   color: #c00;
-  font-size: 52px;
+  font-size: 64px;
   line-height: 1;
   height: 36px;
   display: flex;
