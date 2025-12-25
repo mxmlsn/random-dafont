@@ -542,8 +542,9 @@ body {
   height: 400px;
   background: #c00;
   border-radius: 13px;
-  transform: rotate(-2deg);
-  margin-right: 26px;
+  --scroll-offset: 0px;
+  transform: rotate(-2deg) translateY(var(--scroll-offset));
+  margin-right: 31px;
   margin-bottom: 18px;
   margin-top: -80px;
   padding: 32px 28px;
@@ -553,7 +554,7 @@ body {
 }
 
 .info-card:hover {
-  transform: rotate(0deg);
+  transform: rotate(0deg) translateY(var(--scroll-offset));
 }
 
 .info-text-italic {

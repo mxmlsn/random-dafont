@@ -540,20 +540,36 @@ function initPosterGallery() {
   // Close modal functions
   function closeModal() {
     const modalContent = modal.querySelector('.modal-content');
+    const infoCard = document.querySelector('.info-card');
+    const rect = infoCard.getBoundingClientRect();
 
-    // Reset inline styles
-    modalContent.style.position = '';
-    modalContent.style.top = '';
-    modalContent.style.left = '';
-    modalContent.style.width = '';
-    modalContent.style.height = '';
-    modalContent.style.background = '';
-    modalContent.style.transform = '';
-    modalContent.style.transition = '';
-    modalContent.style.opacity = '';
+    // Animate back to info card
+    modalContent.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    modalContent.style.position = 'fixed';
+    modalContent.style.top = rect.top + 'px';
+    modalContent.style.left = rect.left + 'px';
+    modalContent.style.width = rect.width + 'px';
+    modalContent.style.height = rect.height + 'px';
+    modalContent.style.background = '#c00';
+    modalContent.style.transform = 'rotate(-2deg)';
+    modalContent.style.opacity = '0';
 
-    modal.classList.remove('active');
-    resetForm();
+    // Wait for animation to complete
+    setTimeout(() => {
+      // Reset inline styles
+      modalContent.style.position = '';
+      modalContent.style.top = '';
+      modalContent.style.left = '';
+      modalContent.style.width = '';
+      modalContent.style.height = '';
+      modalContent.style.background = '';
+      modalContent.style.transform = '';
+      modalContent.style.transition = '';
+      modalContent.style.opacity = '';
+
+      modal.classList.remove('active');
+      resetForm();
+    }, 400);
   }
 
   modalClose.addEventListener('click', closeModal);
@@ -886,26 +902,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Info card parallax scroll effect
   const infoCard = document.querySelector('.info-card');
   if (infoCard) {
-    let isHovering = false;
-
-    infoCard.addEventListener('mouseenter', () => {
-      isHovering = true;
-    });
-
-    infoCard.addEventListener('mouseleave', () => {
-      isHovering = false;
-    });
+    let scrollOffset = 0;
 
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const maxScroll = 40;
-      const offset = Math.min(scrollY * 0.1, maxScroll);
+      scrollOffset = Math.min(scrollY * 0.05, maxScroll);
 
-      if (!isHovering) {
-        infoCard.style.transform = `rotate(-2deg) translateY(${offset}px)`;
-      } else {
-        infoCard.style.transform = `rotate(0deg) translateY(${offset}px)`;
-      }
+      infoCard.style.setProperty('--scroll-offset', `${scrollOffset}px`);
     });
   }
 });
