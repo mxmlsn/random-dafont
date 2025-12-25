@@ -151,7 +151,7 @@ body {
 }
 
 .font-info {
-  padding: 12px 12px;
+  padding: 12px 3px 12px 12px;
   border-top: 1px solid #CECECE;
   display: flex;
   align-items: center;
@@ -189,8 +189,8 @@ body {
 
 /* Download Button */
 .btn-download {
-  width: 32px;
-  height: 32px;
+  width: 41px;
+  height: 41px;
   border-radius: 8px;
   background: transparent;
   border: 1px solid #CECECE;
@@ -326,8 +326,9 @@ body {
   border: 1px solid #CECECE;
   color: #555;
   cursor: pointer;
+  font-family: "Arial Narrow", Arial, sans-serif;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 400;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 

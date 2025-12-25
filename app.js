@@ -123,8 +123,8 @@ function startLogoAnimation() {
     clearInterval(logoAnimationInterval);
   }
 
-  // Animate each letter independently
-  logoAnimationInterval = setInterval(() => {
+  // Function to change fonts
+  const changeFonts = () => {
     logoLetters.forEach(letter => {
       // Remove all existing font variation classes
       for (let i = 0; i < totalVariations; i++) {
@@ -134,7 +134,13 @@ function startLogoAnimation() {
       const randomVariation = randInt(0, totalVariations - 1);
       letter.classList.add(`font-var-${randomVariation}`);
     });
-  }, 200); // Change fonts every 200ms
+  };
+
+  // Start immediately
+  changeFonts();
+
+  // Then continue with interval
+  logoAnimationInterval = setInterval(changeFonts, 200); // Change fonts every 200ms
 }
 
 function stopLogoAnimation() {
