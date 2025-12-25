@@ -205,7 +205,8 @@ async function getRandomFontFromCategory(category, statusCallback) {
     name: name || font.name,
     url: font.url,
     category: category.name,
-    previewUrl
+    previewUrl,
+    slug: font.slug
   };
 }
 
@@ -238,6 +239,8 @@ function renderGallery(fonts, totalCount) {
 
     const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
 
+    const downloadUrl = `https://dl.dafont.com/dl/?f=${font.slug}`;
+
     card.innerHTML = `
       <div class="font-preview-container">
         <img class="font-preview" src="${previewSrc}" alt="${font.name}">
@@ -247,6 +250,13 @@ function renderGallery(fonts, totalCount) {
           <div class="font-name">${font.name}</div>
           <div class="font-category">${font.category}</div>
         </div>
+        <a class="btn-download" href="${downloadUrl}" title="Download font">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </a>
       </div>
     `;
 

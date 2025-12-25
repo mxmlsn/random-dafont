@@ -143,6 +143,40 @@ body {
   transition: color 0.15s;
 }
 
+/* Download Button */
+.btn-download {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid #CECECE;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.btn-download:hover {
+  background: #fff;
+  color: #c00;
+  border-color: #fff;
+}
+
+.font-card:hover .btn-download {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.font-card:hover .btn-download:hover {
+  background: #fff;
+  color: #c00;
+  border-color: #fff;
+}
+
 /* Skeleton Loading - Simplified */
 .font-card.skeleton {
   pointer-events: none;
