@@ -524,7 +524,7 @@ body {
 .poster-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 24px 60px;
+  padding: 80px 0 60px;
 }
 
 .poster-header {
@@ -532,6 +532,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+  padding: 0 24px;
 }
 
 .poster-title {
@@ -560,46 +561,35 @@ body {
 .poster-gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 24px;
+  padding: 0 24px;
 }
 
 .poster-card {
   position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.poster-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 
 .poster-image-container {
   width: 100%;
-  height: 280px;
+  height: 340px;
   overflow: hidden;
   background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 12px;
 }
 
 .poster-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s;
-}
-
-.poster-card:hover .poster-image {
-  transform: scale(1.05);
+  object-fit: contain;
 }
 
 .poster-info {
-  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 .poster-author {
@@ -635,13 +625,14 @@ body {
 
 @media (max-width: 768px) {
   .poster-section {
-    padding: 60px 16px 40px;
+    padding: 60px 0 40px;
   }
 
   .poster-header {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
+    padding: 0 16px;
   }
 
   .poster-title {
@@ -650,11 +641,12 @@ body {
 
   .poster-gallery {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
+    padding: 0 16px;
   }
 
   .poster-image-container {
-    height: 200px;
+    height: 340px;
   }
 }
 
@@ -664,7 +656,185 @@ body {
   }
 
   .poster-image-container {
-    height: 280px;
+    height: 340px;
+  }
+}
+
+/* ============================================
+   LIGHTBOX FOR FULLSCREEN POSTER VIEW
+   ============================================ */
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: background 0.2s, opacity 0.2s;
+  z-index: 10;
+}
+
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lightbox-nav:disabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lightbox-prev {
+  left: 24px;
+}
+
+.lightbox-next {
+  right: 24px;
+}
+
+.lightbox-info {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 24px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.lightbox-author {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lightbox-instagram {
+  font-size: 14px;
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.lightbox-instagram:hover {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .lightbox-close,
+  .lightbox-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lightbox-close {
+    top: 16px;
+    right: 16px;
+    font-size: 24px;
+  }
+
+  .lightbox-prev {
+    left: 16px;
+  }
+
+  .lightbox-next {
+    right: 16px;
+  }
+
+  .lightbox-info {
+    bottom: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .lightbox-author {
+    font-size: 14px;
+  }
+
+  .lightbox-instagram {
+    font-size: 13px;
   }
 }
 

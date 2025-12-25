@@ -662,6 +662,8 @@ function fileToBase64(file) {
   });
 }
 
+let currentPosters = [];
+
 async function loadPosters() {
   const gallery = document.getElementById('posterGallery');
   const emptyState = document.getElementById('posterEmpty');
@@ -681,11 +683,13 @@ async function loadPosters() {
       return;
     }
 
+    currentPosters = posters;
+
     gallery.style.display = 'grid';
     emptyState.style.display = 'none';
 
-    gallery.innerHTML = posters.map(poster => `
-      <div class="poster-card">
+    gallery.innerHTML = posters.map((poster, index) => `
+      <div class="poster-card" data-poster-index="${index}">
         <div class="poster-image-container">
           <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
         </div>
@@ -695,6 +699,19 @@ async function loadPosters() {
         </div>
       </div>
     `).join('');
+
+    // Add click handlers to poster cards
+    const posterCards = gallery.querySelectorAll('.poster-card');
+    posterCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Prevent opening lightbox if clicking on Instagram link
+        if (e.target.classList.contains('poster-instagram')) {
+          return;
+        }
+        const index = parseInt(card.dataset.posterIndex);
+        openLightbox(index);
+      });
+    });
 
   } catch (error) {
     console.error('Error loading posters:', error);
@@ -708,3 +725,103 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+
+// ============================================
+// LIGHTBOX FUNCTIONALITY
+// ============================================
+
+let currentLightboxIndex = 0;
+
+function openLightbox(index) {
+  const lightbox = document.getElementById('posterLightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxAuthor = document.getElementById('lightboxAuthor');
+  const lightboxInstagram = document.getElementById('lightboxInstagram');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  currentLightboxIndex = index;
+
+  // Set image and info
+  updateLightboxContent();
+
+  // Show lightbox
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Update nav buttons
+  lightboxPrev.disabled = currentLightboxIndex === 0;
+  lightboxNext.disabled = currentLightboxIndex === currentPosters.length - 1;
+}
+
+function updateLightboxContent() {
+  const poster = currentPosters[currentLightboxIndex];
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxAuthor = document.getElementById('lightboxAuthor');
+  const lightboxInstagram = document.getElementById('lightboxInstagram');
+
+  lightboxImage.src = poster.image_url;
+  lightboxImage.alt = `Poster by ${poster.nickname}`;
+  lightboxAuthor.textContent = poster.nickname;
+
+  if (poster.instagram) {
+    lightboxInstagram.textContent = poster.instagram;
+    lightboxInstagram.href = `https://instagram.com/${poster.instagram.replace('@', '')}`;
+    lightboxInstagram.style.display = 'inline';
+  } else {
+    lightboxInstagram.style.display = 'none';
+  }
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('posterLightbox');
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function navigateLightbox(direction) {
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  if (direction === 'prev' && currentLightboxIndex > 0) {
+    currentLightboxIndex--;
+    updateLightboxContent();
+  } else if (direction === 'next' && currentLightboxIndex < currentPosters.length - 1) {
+    currentLightboxIndex++;
+    updateLightboxContent();
+  }
+
+  // Update nav buttons
+  lightboxPrev.disabled = currentLightboxIndex === 0;
+  lightboxNext.disabled = currentLightboxIndex === currentPosters.length - 1;
+}
+
+// Initialize lightbox event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxBackdrop = document.querySelector('#posterLightbox .lightbox-backdrop');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  // Close lightbox
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxBackdrop.addEventListener('click', closeLightbox);
+
+  // Navigation buttons
+  lightboxPrev.addEventListener('click', () => navigateLightbox('prev'));
+  lightboxNext.addEventListener('click', () => navigateLightbox('next'));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    const lightbox = document.getElementById('posterLightbox');
+    if (!lightbox.classList.contains('active')) return;
+
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      navigateLightbox('prev');
+    } else if (e.key === 'ArrowRight') {
+      navigateLightbox('next');
+    }
+  });
+});

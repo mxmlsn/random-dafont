@@ -131,6 +131,29 @@
     </div>
   </div>
 
+  <!-- Lightbox for Fullscreen Poster View -->
+  <div id="posterLightbox" class="lightbox">
+    <div class="lightbox-backdrop"></div>
+    <div class="lightbox-content">
+      <img id="lightboxImage" class="lightbox-image" src="" alt="">
+    </div>
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+    <div class="lightbox-info" id="lightboxInfo">
+      <span class="lightbox-author" id="lightboxAuthor"></span>
+      <a class="lightbox-instagram" id="lightboxInstagram" href="" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
