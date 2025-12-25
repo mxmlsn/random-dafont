@@ -96,8 +96,8 @@ body {
 .svg-link {
   position: absolute;
   top: 32px;
-  right: 24px;
-  font-size: 12px;
+  right: 32px;
+  font-size: 24px;
   color: #888;
   text-decoration: none;
   transition: color 0.2s;
