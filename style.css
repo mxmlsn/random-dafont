@@ -72,32 +72,8 @@
 }
 
 @font-face {
-  font-family: 'IngaStoneSigns';
-  src: url('random-fonts/Inga Stone Signs.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Markbats';
-  src: url('random-fonts/Markbats3-Regular.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'RazerBlackwidow';
-  src: url('random-fonts/RazerBlackwidow-Regular.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'MonoMMM';
   src: url('random-fonts/monoMMM_5.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'N0rpIcons';
-  src: url('random-fonts/n0rpicons2.ttf') format('truetype');
   font-display: swap;
 }
 
@@ -178,13 +154,9 @@ body {
 .logo-random .font-var-8 { font-family: 'AhabeshaTypewriter', monospace; }
 .logo-random .font-var-9 { font-family: 'MeyneTextur', serif; }
 .logo-random .font-var-10 { font-family: 'DisplayFreeTFB', sans-serif; }
-.logo-random .font-var-11 { font-family: 'IngaStoneSigns', sans-serif; }
-.logo-random .font-var-12 { font-family: 'Markbats', sans-serif; }
-.logo-random .font-var-13 { font-family: 'RazerBlackwidow', sans-serif; }
-.logo-random .font-var-14 { font-family: 'MonoMMM', monospace; }
-.logo-random .font-var-15 { font-family: 'N0rpIcons', fantasy; }
-.logo-random .font-var-16 { font-family: 'Squac', sans-serif; }
-.logo-random .font-var-17 { font-family: 'USA', sans-serif; }
+.logo-random .font-var-11 { font-family: 'MonoMMM', monospace; }
+.logo-random .font-var-12 { font-family: 'Squac', sans-serif; }
+.logo-random .font-var-13 { font-family: 'USA', sans-serif; }
 
 .logo-dafont {
   font-family: 'Ellis', serif;
