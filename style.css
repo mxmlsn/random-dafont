@@ -548,7 +548,7 @@ body {
   width: 264px;
   height: 400px;
   background: #c00;
-  border-radius: 20px;
+  border-radius: 24px;
   --scroll-offset: 0px;
   transform: rotate(-2deg) translateY(var(--scroll-offset));
   margin-right: 31px;
@@ -575,6 +575,26 @@ body {
   margin-bottom: 16px;
 }
 
+.info-instagram-link {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: #fff;
+}
+
+.arrow-animate {
+  display: inline-block;
+  animation: arrow-slide 3.6s ease-in-out infinite;
+}
+
+@keyframes arrow-slide {
+  0%, 100% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+}
+
 
 
 .info-cta {
@@ -583,17 +603,20 @@ body {
   font-size: 40px;
   font-weight: 400;
   color: #fff;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: #fff;
+  text-decoration-thickness: 1.8px;
+  text-underline-offset: 4px;
   letter-spacing: 0px;
   margin-bottom: 6px;
-
+  line-height: 1.2;
   padding: 44px 0;
   text-align: center;
   font-style: normal;
 }
 
 .info-cta:hover {
-  background: rgba(255, 255, 255, 0.1);
+  font-weight: 700;
 }
 
 
@@ -613,11 +636,8 @@ body {
 
 .info-author a {
   color: #fff;
-  text-decoration: none;
-}
-
-.info-author a:hover {
   text-decoration: underline;
+  text-decoration-color: #fff;
 }
 
 .info-card {
