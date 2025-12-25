@@ -678,8 +678,11 @@ async function loadPosters() {
     const posters = await response.json();
 
     if (posters.length === 0) {
-      gallery.style.display = 'none';
-      emptyState.style.display = 'block';
+      // Keep gallery visible for info card, just hide empty state
+      gallery.style.display = 'block';
+      emptyState.style.display = 'none';
+      // Remove any existing poster cards but keep info card
+      gallery.querySelectorAll('.poster-card').forEach(card => card.remove());
       return;
     }
 
@@ -688,7 +691,9 @@ async function loadPosters() {
     gallery.style.display = 'block';
     emptyState.style.display = 'none';
 
-    gallery.innerHTML = posters.map((poster, index) => `
+    // Keep the info card and add posters after it
+    const infoCard = gallery.querySelector('.info-card');
+    const postersHtml = posters.map((poster, index) => `
       <div class="poster-card" data-poster-index="${index}">
         <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
         <div class="poster-info">
@@ -697,6 +702,15 @@ async function loadPosters() {
         </div>
       </div>
     `).join('');
+
+    // Remove old poster cards but keep info card
+    gallery.querySelectorAll('.poster-card').forEach(card => card.remove());
+    // Add new posters after info card
+    if (infoCard) {
+      infoCard.insertAdjacentHTML('afterend', postersHtml);
+    } else {
+      gallery.innerHTML = postersHtml;
+    }
 
     // Add click handlers to poster cards
     const posterCards = gallery.querySelectorAll('.poster-card');
@@ -713,8 +727,9 @@ async function loadPosters() {
 
   } catch (error) {
     console.error('Error loading posters:', error);
-    gallery.style.display = 'none';
-    emptyState.style.display = 'block';
+    // Keep gallery visible for info card even on error
+    gallery.style.display = 'block';
+    emptyState.style.display = 'none';
   }
 }
 
