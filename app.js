@@ -1,5 +1,5 @@
 // ============================================
-// КАТЕГОРИИ (67 подкатегорий DaFont)
+// CATEGORIES (67 DaFont subcategories)
 // ============================================
 
 const ALL_CATEGORIES = [
@@ -93,7 +93,7 @@ const ALL_CATEGORIES = [
 ];
 
 // ============================================
-// СОСТОЯНИЕ
+// STATE
 // ============================================
 
 let history = [];
@@ -102,7 +102,7 @@ const MAX_HISTORY = 10;
 let currentCount = 3;
 
 // ============================================
-// УТИЛИТЫ
+// UTILITIES
 // ============================================
 
 function randInt(min, max) {
@@ -117,7 +117,7 @@ async function fetchHTML(url) {
 }
 
 // ============================================
-// ПАРСИНГ
+// PARSING
 // ============================================
 
 function parseMaxPage(html) {
@@ -164,20 +164,17 @@ async function getFontData(fontUrl) {
     const previewMatch = html.match(/src="(\/img\/charmap\/[^"]+)"/);
     const previewUrl = previewMatch ? 'https://www.dafont.com' + previewMatch[1] : null;
 
-    const downloadMatch = html.match(/href="(\/\/dl\.dafont\.com\/dl\/\?f=[^"]+)"/);
-    const downloadUrl = downloadMatch ? 'https:' + downloadMatch[1] : null;
-
     const nameMatch = html.match(/<title>([^<]+) Font/i);
     const name = nameMatch ? nameMatch[1].trim() : null;
 
-    return { previewUrl, downloadUrl, name };
+    return { previewUrl, name };
   } catch (e) {
-    return { previewUrl: null, downloadUrl: null, name: null };
+    return { previewUrl: null, name: null };
   }
 }
 
 // ============================================
-// ОСНОВНАЯ ЛОГИКА
+// MAIN LOGIC
 // ============================================
 
 async function getRandomFontFromCategory(category, statusCallback) {
@@ -202,19 +199,18 @@ async function getRandomFontFromCategory(category, statusCallback) {
   const font = fonts[randInt(0, fonts.length - 1)];
 
   statusCallback(`Loading ${font.name}...`);
-  const { previewUrl, downloadUrl, name } = await getFontData(font.url);
+  const { previewUrl, name } = await getFontData(font.url);
 
   return {
     name: name || font.name,
     url: font.url,
     category: category.name,
-    previewUrl,
-    downloadUrl
+    previewUrl
   };
 }
 
 // ============================================
-// РЕНДЕРИНГ
+// RENDERING
 // ============================================
 
 function renderGallery(fonts, totalCount) {
@@ -242,16 +238,6 @@ function renderGallery(fonts, totalCount) {
 
     const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
 
-    const downloadBtn = font.downloadUrl
-      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" onclick="event.stopPropagation()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </a>`
-      : '';
-
     card.innerHTML = `
       <div class="font-preview-container">
         <img class="font-preview" src="${previewSrc}" alt="${font.name}">
@@ -261,11 +247,10 @@ function renderGallery(fonts, totalCount) {
           <div class="font-name">${font.name}</div>
           <div class="font-category">${font.category}</div>
         </div>
-        ${downloadBtn}
       </div>
     `;
 
-    // Click handlers - separate for preview and details (not entire card)
+    // Click handlers - separate for preview and details
     card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
     card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
 
@@ -374,7 +359,7 @@ async function discoverFonts(count) {
 }
 
 // ============================================
-// ИНИЦИАЛИЗАЦИЯ
+// INITIALIZATION
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {

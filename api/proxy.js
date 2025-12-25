@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'URL parameter required' });
   }
 
-  // Проверка что URL ведёт на dafont.com
+  // Check that URL leads to dafont.com
   if (!url.startsWith('https://www.dafont.com/')) {
     return res.status(403).json({ error: 'Only dafont.com URLs allowed' });
   }

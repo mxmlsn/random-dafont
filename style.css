@@ -41,7 +41,7 @@ body {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: -1 24px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,13 +83,6 @@ body {
 
 .font-card:hover .font-name,
 .font-card:hover .font-category {
-  color: #fff;
-}
-
-/* Download button on card hover - but NOT when hovering the button itself */
-.font-card:hover .download-btn:not(:hover) {
-  background: transparent;
-  border-color: #fff;
   color: #fff;
 }
 
@@ -148,32 +141,6 @@ body {
   font-size: 12px;
   color: #888;
   transition: color 0.15s;
-}
-
-.download-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  background: transparent;
-  border: 1px solid #CECECE;
-  color: #555;
-  text-decoration: none;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.download-btn:hover,
-.font-card .download-btn:hover {
-  background: #c00 !important;
-  color: #fff !important;
-  border-color: #c00 !important;
 }
 
 /* Skeleton Loading - Simplified */
