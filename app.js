@@ -470,4 +470,241 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Auto-load 3 fonts on page load
   discoverFonts(3);
+
+  // Initialize poster gallery
+  initPosterGallery();
 });
+
+// ============================================
+// POSTER GALLERY
+// ============================================
+
+let selectedFile = null;
+
+function initPosterGallery() {
+  const submitPosterBtn = document.getElementById('submitPosterBtn');
+  const modal = document.getElementById('submitModal');
+  const modalClose = document.getElementById('modalClose');
+  const modalBackdrop = modal.querySelector('.modal-backdrop');
+  const cancelBtn = document.getElementById('cancelSubmit');
+  const posterForm = document.getElementById('posterForm');
+  const fileInput = document.getElementById('posterImage');
+  const fileUpload = document.getElementById('fileUpload');
+  const fileUploadContent = fileUpload.querySelector('.file-upload-content');
+  const filePreview = document.getElementById('filePreview');
+  const previewImg = document.getElementById('previewImg');
+  const fileRemove = document.getElementById('fileRemove');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitSuccess = document.getElementById('submitSuccess');
+  const submitAnother = document.getElementById('submitAnother');
+
+  // Open modal
+  submitPosterBtn.addEventListener('click', () => {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  // Close modal functions
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    resetForm();
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
+  // File handling
+  fileInput.addEventListener('change', handleFileSelect);
+
+  function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      alert('Please select a JPG, PNG, or WebP image.');
+      fileInput.value = '';
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB.');
+      fileInput.value = '';
+      return;
+    }
+
+    selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+      fileUploadContent.style.display = 'none';
+      filePreview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Remove file
+  fileRemove.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearFileSelection();
+  });
+
+  function clearFileSelection() {
+    selectedFile = null;
+    fileInput.value = '';
+    previewImg.src = '';
+    filePreview.style.display = 'none';
+    fileUploadContent.style.display = 'block';
+  }
+
+  // Form submission
+  posterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!selectedFile) {
+      alert('Please select an image.');
+      return;
+    }
+
+    const nickname = document.getElementById('nickname').value.trim();
+    const instagram = document.getElementById('instagram').value.trim();
+
+    if (!nickname) {
+      alert('Please enter your name or nickname.');
+      return;
+    }
+
+    // Disable submit button and show loading
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').style.display = 'none';
+    submitBtn.querySelector('.btn-loading').style.display = 'inline';
+
+    try {
+      // Convert file to base64
+      const base64 = await fileToBase64(selectedFile);
+
+      const response = await fetch('/api/submit-poster', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nickname,
+          instagram,
+          imageBase64: base64,
+          fileName: selectedFile.name,
+          fileType: selectedFile.type
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit poster');
+      }
+
+      // Show success state
+      posterForm.style.display = 'none';
+      submitSuccess.style.display = 'block';
+
+    } catch (error) {
+      console.error('Submit error:', error);
+      alert(error.message || 'Failed to submit poster. Please try again.');
+    } finally {
+      // Re-enable submit button
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.btn-text').style.display = 'inline';
+      submitBtn.querySelector('.btn-loading').style.display = 'none';
+    }
+  });
+
+  // Submit another
+  submitAnother.addEventListener('click', () => {
+    resetForm();
+    posterForm.style.display = 'flex';
+    submitSuccess.style.display = 'none';
+  });
+
+  function resetForm() {
+    posterForm.reset();
+    clearFileSelection();
+    posterForm.style.display = 'flex';
+    submitSuccess.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.querySelector('.btn-text').style.display = 'inline';
+    submitBtn.querySelector('.btn-loading').style.display = 'none';
+  }
+
+  // Load posters
+  loadPosters();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadPosters() {
+  const gallery = document.getElementById('posterGallery');
+  const emptyState = document.getElementById('posterEmpty');
+
+  try {
+    const response = await fetch('/api/posters');
+
+    if (!response.ok) {
+      throw new Error('Failed to load posters');
+    }
+
+    const posters = await response.json();
+
+    if (posters.length === 0) {
+      gallery.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    gallery.style.display = 'grid';
+    emptyState.style.display = 'none';
+
+    gallery.innerHTML = posters.map(poster => `
+      <div class="poster-card">
+        <div class="poster-image-container">
+          <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
+        </div>
+        <div class="poster-info">
+          <span class="poster-author">${escapeHtml(poster.nickname)}</span>
+          ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram.replace('@', '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(poster.instagram)}</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    console.error('Error loading posters:', error);
+    gallery.style.display = 'none';
+    emptyState.style.display = 'block';
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
