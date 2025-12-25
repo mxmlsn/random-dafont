@@ -147,7 +147,7 @@ body {
 .btn-download {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 8px;
   background: transparent;
   border: 1px solid #CECECE;
   color: #555;

@@ -250,7 +250,7 @@ function renderGallery(fonts, totalCount) {
           <div class="font-name">${font.name}</div>
           <div class="font-category">${font.category}</div>
         </div>
-        <a class="btn-download" href="${downloadUrl}" title="Download font">
+        <a class="btn-download" href="${downloadUrl}" target="_blank" rel="nofollow" title="Download font">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -263,6 +263,9 @@ function renderGallery(fonts, totalCount) {
     // Click handlers - separate for preview and details
     card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
     card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
+
+    // Prevent download button click from bubbling to card
+    card.querySelector('.btn-download').onclick = (e) => e.stopPropagation();
 
     // Replace skeleton at this index
     if (existingCards[index]) {
