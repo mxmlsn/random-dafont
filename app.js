@@ -685,14 +685,12 @@ async function loadPosters() {
 
     currentPosters = posters;
 
-    gallery.style.display = 'grid';
+    gallery.style.display = 'block';
     emptyState.style.display = 'none';
 
     gallery.innerHTML = posters.map((poster, index) => `
       <div class="poster-card" data-poster-index="${index}">
-        <div class="poster-image-container">
-          <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
-        </div>
+        <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
         <div class="poster-info">
           <span class="poster-author">${escapeHtml(poster.nickname)}</span>
           ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram.replace('@', '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(poster.instagram)}</a>` : ''}

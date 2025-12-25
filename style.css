@@ -559,21 +559,20 @@ body {
 }
 
 .poster-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
   padding: 0 24px;
-  align-items: flex-start;
+  font-size: 0;
 }
 
 .poster-card {
+  display: inline-block;
+  vertical-align: top;
   cursor: pointer;
+  margin-right: 18px;
+  margin-bottom: 18px;
 }
 
-.poster-image-container {
-  height: 340px;
-  margin-bottom: 12px;
-  line-height: 0;
+.poster-card:last-child {
+  margin-right: 0;
 }
 
 .poster-image {
@@ -587,10 +586,11 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  margin-top: 12px;
+  font-size: 14px;
 }
 
 .poster-author {
-  font-size: 14px;
   font-weight: 600;
   color: #333;
 }
@@ -631,12 +631,12 @@ body {
   }
 
   .poster-gallery {
-    gap: 18px;
     padding: 0 16px;
   }
 
-  .poster-image-container {
-    height: 280px;
+  .poster-card {
+    margin-right: 16px;
+    margin-bottom: 16px;
   }
 
   .poster-image {
