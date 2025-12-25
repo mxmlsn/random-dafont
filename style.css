@@ -230,7 +230,7 @@ body {
   bottom: 24px;
   left: 0;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   z-index: 5;
 }
 
@@ -270,7 +270,7 @@ body {
   bottom: 24px;
   right: 0;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   z-index: 5;
 }
 
