@@ -243,13 +243,13 @@ function renderGallery(fonts, totalCount) {
     const previewSrc = font.previewUrl || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 60%22><text x=%2210%22 y=%2240%22 font-size=%2216%22 fill=%22%23999%22>No preview</text></svg>';
 
     const downloadBtn = font.downloadUrl
-      ? `<a class="download-btn" href="${font.downloadUrl}" title="Download" target="_blank" rel="nofollow">
+      ? `<button class="download-btn" data-url="${font.downloadUrl}" title="Download">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-        </a>`
+        </button>`
       : '';
 
     card.innerHTML = `
@@ -265,25 +265,20 @@ function renderGallery(fonts, totalCount) {
       </div>
     `;
 
-    // Click handlers
-    const previewContainer = card.querySelector('.font-preview-container');
-    const fontDetails = card.querySelector('.font-details');
-    const downloadButton = card.querySelector('.download-btn');
-
-    if (previewContainer) {
-      previewContainer.onclick = () => window.open(font.url, '_blank');
-    }
-
-    if (fontDetails) {
-      fontDetails.onclick = () => window.open(font.url, '_blank');
-    }
-
-    if (downloadButton) {
-      downloadButton.onclick = (e) => {
+    // Click on card opens font page (except download button)
+    card.onclick = (e) => {
+      // If clicked on download button or its children, don't open font page
+      if (e.target.closest('.download-btn')) {
+        e.preventDefault();
         e.stopPropagation();
-        // Link handles navigation automatically
-      };
-    }
+        const url = e.target.closest('.download-btn').dataset.url;
+        if (url) {
+          window.open(url, '_blank');
+        }
+        return;
+      }
+      window.open(font.url, '_blank');
+    };
 
     // Replace skeleton at this index
     if (existingCards[index]) {
