@@ -116,7 +116,7 @@ function randInt(min, max) {
 
 function startLogoAnimation() {
   const logoLetters = document.querySelectorAll('.logo-random span');
-  const totalVariations = 14; // font-var-0 to font-var-13
+  const totalVariations = 10; // font-var-0 to font-var-9
 
   // Clear any existing interval
   if (logoAnimationInterval) {

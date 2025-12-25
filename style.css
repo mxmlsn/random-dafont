@@ -65,29 +65,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'DisplayFreeTFB';
-  src: url('random-fonts/DISPLAY FREE TFB.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MonoMMM';
-  src: url('random-fonts/monoMMM_5.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Squac';
-  src: url('random-fonts/squac___.TTF') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'USA';
-  src: url('random-fonts/usa.ttf') format('truetype');
-  font-display: swap;
-}
 
 * {
   box-sizing: border-box;
@@ -153,10 +130,6 @@ body {
 .logo-random .font-var-7 { font-family: 'Adorable', sans-serif; }
 .logo-random .font-var-8 { font-family: 'AhabeshaTypewriter', monospace; }
 .logo-random .font-var-9 { font-family: 'MeyneTextur', serif; }
-.logo-random .font-var-10 { font-family: 'DisplayFreeTFB', sans-serif; }
-.logo-random .font-var-11 { font-family: 'MonoMMM', monospace; }
-.logo-random .font-var-12 { font-family: 'Squac', sans-serif; }
-.logo-random .font-var-13 { font-family: 'USA', sans-serif; }
 
 .logo-dafont {
   font-family: 'Ellis', serif;
