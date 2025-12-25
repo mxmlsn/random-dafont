@@ -480,13 +480,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 let selectedFile = null;
+let awaitingAnonConfirmation = false;
 
 function initPosterGallery() {
   const submitPosterBtn = document.getElementById('submitPosterBtn');
   const modal = document.getElementById('submitModal');
   const modalClose = document.getElementById('modalClose');
   const modalBackdrop = modal.querySelector('.modal-backdrop');
-  const cancelBtn = document.getElementById('cancelSubmit');
   const posterForm = document.getElementById('posterForm');
   const fileInput = document.getElementById('posterImage');
   const fileUpload = document.getElementById('fileUpload');
@@ -512,7 +512,6 @@ function initPosterGallery() {
 
   modalClose.addEventListener('click', closeModal);
   modalBackdrop.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click', closeModal);
 
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
@@ -520,6 +519,9 @@ function initPosterGallery() {
       closeModal();
     }
   });
+
+  // Font inputs logic
+  initFontInputs();
 
   // File handling
   fileInput.addEventListener('change', handleFileSelect);
@@ -579,13 +581,38 @@ function initPosterGallery() {
       return;
     }
 
-    const nickname = document.getElementById('nickname').value.trim();
-    const instagram = document.getElementById('instagram').value.trim();
+    let instagram = document.getElementById('instagram').value.trim();
+    // Remove @ if user entered it
+    if (instagram.startsWith('@')) {
+      instagram = instagram.substring(1);
+    }
 
-    if (!nickname) {
-      alert('Please enter your name or nickname.');
+    const anonMessage = document.getElementById('anonMessage');
+    const instagramInput = document.getElementById('instagram');
+
+    // Check if Instagram is empty and awaiting confirmation
+    if (!instagram && !awaitingAnonConfirmation) {
+      // Show anonymous confirmation
+      anonMessage.style.display = 'inline';
+      instagramInput.classList.add('highlight-green');
+      submitBtn.querySelector('.btn-text').textContent = 'yes';
+      awaitingAnonConfirmation = true;
+
+      // Remove green highlight after 2 seconds
+      setTimeout(() => {
+        instagramInput.classList.remove('highlight-green');
+      }, 2000);
+
       return;
     }
+
+    // Collect font names
+    const fontInputs = document.querySelectorAll('.font-name-input');
+    const fonts = Array.from(fontInputs)
+      .map(input => input.value.trim())
+      .filter(font => font !== '');
+
+    const usedSvg = document.getElementById('usedSvg').checked;
 
     // Disable submit button and show loading
     submitBtn.disabled = true;
@@ -602,8 +629,9 @@ function initPosterGallery() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nickname,
           instagram,
+          fonts,
+          usedSvg,
           imageBase64: base64,
           fileName: selectedFile.name,
           fileType: selectedFile.type
@@ -645,11 +673,122 @@ function initPosterGallery() {
     submitSuccess.style.display = 'none';
     submitBtn.disabled = false;
     submitBtn.querySelector('.btn-text').style.display = 'inline';
+    submitBtn.querySelector('.btn-text').textContent = 'Submit';
     submitBtn.querySelector('.btn-loading').style.display = 'none';
+
+    // Reset anonymous confirmation state
+    awaitingAnonConfirmation = false;
+    document.getElementById('anonMessage').style.display = 'none';
+    document.getElementById('instagram').classList.remove('highlight-green');
+
+    // Reset font inputs to single empty field
+    resetFontInputs();
   }
 
   // Load posters
   loadPosters();
+}
+
+// ============================================
+// FONT INPUTS MANAGEMENT
+// ============================================
+
+function initFontInputs() {
+  const fontInputsContainer = document.getElementById('fontInputs');
+
+  // Delegate event handling to container
+  fontInputsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-add-font')) {
+      addFontInput();
+    } else if (e.target.classList.contains('btn-remove-font')) {
+      removeFontInput(e.target);
+    }
+  });
+}
+
+function addFontInput() {
+  const fontInputsContainer = document.getElementById('fontInputs');
+  const currentRows = fontInputsContainer.querySelectorAll('.font-input-row');
+
+  if (currentRows.length >= 10) {
+    return; // Max 10 font inputs
+  }
+
+  const newRow = document.createElement('div');
+  newRow.className = 'font-input-row';
+  newRow.innerHTML = `
+    <input type="text" class="font-name-input" placeholder="Font name" maxlength="50">
+    <button type="button" class="btn-remove-font" title="Remove font">−</button>
+  `;
+
+  fontInputsContainer.appendChild(newRow);
+
+  // Update add button state
+  updateAddButtonState();
+}
+
+function removeFontInput(removeBtn) {
+  const fontInputsContainer = document.getElementById('fontInputs');
+  const row = removeBtn.closest('.font-input-row');
+  const currentRows = fontInputsContainer.querySelectorAll('.font-input-row');
+
+  // Keep at least one row
+  if (currentRows.length > 1) {
+    row.remove();
+    updateAddButtonState();
+  }
+}
+
+function resetFontInputs() {
+  const fontInputsContainer = document.getElementById('fontInputs');
+  fontInputsContainer.innerHTML = `
+    <div class="font-input-row">
+      <input type="text" class="font-name-input" placeholder="Font name" maxlength="50">
+      <button type="button" class="btn-add-font" title="Add another font">+</button>
+    </div>
+  `;
+}
+
+function updateAddButtonState() {
+  const fontInputsContainer = document.getElementById('fontInputs');
+  const currentRows = fontInputsContainer.querySelectorAll('.font-input-row');
+
+  // Remove all add buttons first
+  currentRows.forEach(row => {
+    const addBtn = row.querySelector('.btn-add-font');
+    if (addBtn) {
+      addBtn.remove();
+    }
+  });
+
+  // Add the add button to the last row if we haven't reached the limit
+  if (currentRows.length < 10) {
+    const lastRow = currentRows[currentRows.length - 1];
+    const removeBtn = lastRow.querySelector('.btn-remove-font');
+
+    if (!removeBtn) {
+      // First row - add the add button
+      const addBtn = document.createElement('button');
+      addBtn.type = 'button';
+      addBtn.className = 'btn-add-font';
+      addBtn.title = 'Add another font';
+      addBtn.textContent = '+';
+      lastRow.appendChild(addBtn);
+    }
+  }
+
+  // Ensure first row always has add button if it's the only row
+  if (currentRows.length === 1) {
+    const firstRow = currentRows[0];
+    if (!firstRow.querySelector('.btn-add-font')) {
+      const addBtn = document.createElement('button');
+      addBtn.type = 'button';
+      addBtn.className = 'btn-add-font';
+      addBtn.title = 'Add another font';
+      addBtn.textContent = '+';
+      firstRow.appendChild(addBtn);
+    }
+  }
 }
 
 function fileToBase64(file) {
@@ -694,10 +833,9 @@ async function loadPosters() {
     const infoCard = gallery.querySelector('.info-card');
     const postersHtml = posters.map((poster, index) => `
       <div class="poster-card" data-poster-index="${index}">
-        <img class="poster-image" src="${poster.image_url}" alt="Poster by ${poster.nickname}" loading="lazy">
+        <img class="poster-image" src="${poster.image_url}" alt="${poster.instagram ? `Poster by @${poster.instagram}` : 'Anonymous poster'}" loading="lazy">
         <div class="poster-info">
-          <span class="poster-author">${escapeHtml(poster.nickname)}</span>
-          ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram.replace('@', '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(poster.instagram)}</a>` : ''}
+          ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram}" target="_blank" rel="noopener noreferrer">@${escapeHtml(poster.instagram)}</a>` : ''}
         </div>
       </div>
     `).join('');
@@ -769,19 +907,37 @@ function openLightbox(index) {
 function updateLightboxContent() {
   const poster = currentPosters[currentLightboxIndex];
   const lightboxImage = document.getElementById('lightboxImage');
-  const lightboxAuthor = document.getElementById('lightboxAuthor');
   const lightboxInstagram = document.getElementById('lightboxInstagram');
+  const lightboxFonts = document.getElementById('lightboxFonts');
+  const lightboxSvgBadge = document.getElementById('lightboxSvgBadge');
 
   lightboxImage.src = poster.image_url;
-  lightboxImage.alt = `Poster by ${poster.nickname}`;
-  lightboxAuthor.textContent = poster.nickname;
+  lightboxImage.alt = poster.instagram ? `Poster by @${poster.instagram}` : 'Anonymous poster';
 
+  // Instagram
   if (poster.instagram) {
-    lightboxInstagram.textContent = poster.instagram;
-    lightboxInstagram.href = `https://instagram.com/${poster.instagram.replace('@', '')}`;
-    lightboxInstagram.style.display = 'inline';
+    lightboxInstagram.textContent = `@${poster.instagram}`;
+    lightboxInstagram.href = `https://instagram.com/${poster.instagram}`;
+    lightboxInstagram.style.display = 'block';
   } else {
     lightboxInstagram.style.display = 'none';
+  }
+
+  // Fonts
+  if (poster.fonts && poster.fonts.length > 0) {
+    lightboxFonts.innerHTML = poster.fonts
+      .map(font => `<div class="lightbox-font-item">${escapeHtml(font)}</div>`)
+      .join('');
+    lightboxFonts.style.display = 'flex';
+  } else {
+    lightboxFonts.style.display = 'none';
+  }
+
+  // SVG badge
+  if (poster.used_svg) {
+    lightboxSvgBadge.style.display = 'block';
+  } else {
+    lightboxSvgBadge.style.display = 'none';
   }
 }
 

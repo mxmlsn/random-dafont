@@ -664,20 +664,19 @@ body {
 
 .poster-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
   margin-top: 2px;
   font-size: 14px;
 }
 
 .poster-author {
-  font-weight: 600;
-  color: #333;
+  display: none;
 }
 
 .poster-instagram {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 400;
   color: #888;
   text-decoration: none;
   transition: color 0.2s;
@@ -851,34 +850,52 @@ body {
 
 .lightbox-info {
   position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  padding: 12px 20px;
-  border-radius: 24px;
-  color: #fff;
+  bottom: 15px;
+  left: 15px;
+  transform: none;
+  background: #fff;
+  padding: 8px;
+  border-radius: 3px;
+  width: 60px;
+  min-height: 60px;
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 6px;
   z-index: 10;
 }
 
 .lightbox-author {
-  font-size: 15px;
-  font-weight: 600;
+  display: none;
 }
 
 .lightbox-instagram {
-  font-size: 14px;
-  color: #ddd;
+  font-size: 12px;
+  color: #333;
   text-decoration: none;
   transition: color 0.2s;
+  word-break: break-word;
 }
 
 .lightbox-instagram:hover {
-  color: #fff;
+  color: #c00;
+}
+
+.lightbox-fonts {
+  font-size: 10px;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lightbox-font-item {
+  line-height: 1.2;
+}
+
+.lightbox-svg-badge {
+  font-size: 10px;
+  color: #888;
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
@@ -1110,33 +1127,146 @@ body {
   background: #c00;
 }
 
+/* Instagram Input Wrapper */
+.instagram-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.instagram-prefix {
+  position: absolute;
+  left: 16px;
+  font-size: 15px;
+  color: #666;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.instagram-input-wrapper input {
+  padding-left: 30px !important;
+}
+
+.instagram-input-wrapper input.highlight-green {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+  animation: green-pulse 0.5s ease;
+}
+
+@keyframes green-pulse {
+  0%, 100% {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  }
+  50% {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.3);
+  }
+}
+
+/* Font Inputs */
+.font-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.font-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.font-name-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.font-name-input:focus {
+  outline: none;
+  border-color: #c00;
+  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
+}
+
+.btn-add-font,
+.btn-remove-font {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  font-size: 20px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-add-font:hover {
+  background: #c00;
+  border-color: #c00;
+  color: #fff;
+}
+
+.btn-remove-font {
+  background: #fff;
+  color: #c00;
+}
+
+.btn-remove-font:hover {
+  background: #c00;
+  border-color: #c00;
+  color: #fff;
+}
+
+.btn-add-font:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #c00;
+}
+
 /* Form Actions */
 .form-actions {
   display: flex;
   gap: 12px;
   margin-top: 8px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.btn-cancel {
-  flex: 1;
-  padding: 14px 20px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-family: "Arial Narrow", Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: #555;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-cancel:hover {
-  background: #e8e8e8;
+.anon-message {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin-right: auto;
 }
 
 .btn-submit {
-  flex: 1;
   padding: 14px 20px;
   background: #c00;
   border: none;
@@ -1147,6 +1277,7 @@ body {
   color: #fff;
   cursor: pointer;
   transition: background 0.2s;
+  min-width: 120px;
 }
 
 .btn-submit:hover {
