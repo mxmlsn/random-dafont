@@ -835,7 +835,7 @@ async function loadPosters() {
       <div class="poster-card" data-poster-index="${index}">
         <img class="poster-image" src="${poster.image_url}" alt="${poster.instagram ? `Poster by @${poster.instagram}` : 'Anonymous poster'}" loading="lazy">
         <div class="poster-info">
-          ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram}" target="_blank" rel="noopener noreferrer">@${escapeHtml(poster.instagram)}</a>` : ''}
+          ${poster.instagram ? `<a class="poster-instagram" href="https://instagram.com/${poster.instagram}" target="_blank" rel="noopener noreferrer">@${escapeHtml(poster.instagram)}</a>` : '<span class="poster-anonymous"></span>'}
         </div>
       </div>
     `).join('');

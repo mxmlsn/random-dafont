@@ -23,16 +23,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { nickname, instagram, imageBase64, fileName, fileType } = req.body;
+    const { instagram, fonts, usedSvg, imageBase64, fileName, fileType } = req.body;
 
     // Validate required fields
-    if (!nickname || !imageBase64 || !fileName) {
+    if (!imageBase64 || !fileName) {
       return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    // Validate nickname length
-    if (nickname.length > 50) {
-      return res.status(400).json({ error: 'Nickname too long' });
     }
 
     // Validate file type
@@ -77,11 +72,18 @@ export default async function handler(req, res) {
     const cloudinaryData = await cloudinaryResponse.json();
     const imageUrl = cloudinaryData.secure_url;
 
-    // Clean instagram handle
+    // Clean instagram handle (remove @ if present)
     let cleanInstagram = instagram ? instagram.trim() : null;
-    if (cleanInstagram && !cleanInstagram.startsWith('@')) {
-      cleanInstagram = '@' + cleanInstagram;
+    if (cleanInstagram && cleanInstagram.startsWith('@')) {
+      cleanInstagram = cleanInstagram.substring(1);
     }
+    // Make it null if empty string
+    if (!cleanInstagram) {
+      cleanInstagram = null;
+    }
+
+    // Prepare fonts array (ensure it's valid JSON)
+    const fontsArray = fonts && Array.isArray(fonts) ? fonts : [];
 
     // Insert poster record into Supabase database
     // Use service key if available (bypasses RLS), otherwise use anon key
@@ -97,8 +99,9 @@ export default async function handler(req, res) {
           'Prefer': 'return=representation'
         },
         body: JSON.stringify({
-          nickname: nickname.trim(),
           instagram: cleanInstagram,
+          fonts: fontsArray,
+          used_svg: usedSvg || false,
           image_url: imageUrl,
           status: 'pending'
         })
@@ -120,8 +123,9 @@ export default async function handler(req, res) {
         telegramBotToken,
         telegramChatId,
         posterId,
-        nickname.trim(),
         cleanInstagram,
+        fontsArray,
+        usedSvg,
         imageUrl
       );
     }
@@ -134,11 +138,12 @@ export default async function handler(req, res) {
 }
 
 // Send poster notification to Telegram with moderation buttons
-async function sendTelegramNotification(token, chatId, posterId, nickname, instagram, imageUrl) {
+async function sendTelegramNotification(token, chatId, posterId, instagram, fonts, usedSvg, imageUrl) {
   try {
     const caption = `🎨 New poster submission!\n\n` +
-      `👤 Author: ${nickname}\n` +
-      (instagram ? `📷 Instagram: ${instagram}\n` : '') +
+      (instagram ? `📷 Instagram: @${instagram}\n` : '👤 Anonymous\n') +
+      (fonts && fonts.length > 0 ? `🔤 Fonts: ${fonts.join(', ')}\n` : '') +
+      (usedSvg ? `🎨 Uses SVG from free-svg.com\n` : '') +
       `\n🆔 ID: ${posterId}`;
 
     const keyboard = {
