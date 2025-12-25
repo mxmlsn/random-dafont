@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
-      const maxScroll = 55;
+      const maxScroll = 48;
       scrollOffset = Math.min(scrollY * 0.2, maxScroll);
 
       infoCard.style.setProperty('--scroll-offset', `${scrollOffset}px`);
