@@ -7,9 +7,16 @@ export default async function handler(req, res) {
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
+  const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
 
   if (!supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'Supabase not configured' });
+  }
+
+  if (!cloudinaryCloudName || !cloudinaryApiKey || !cloudinaryApiSecret) {
+    return res.status(500).json({ error: 'Cloudinary not configured' });
   }
 
   try {
@@ -37,39 +44,36 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'File too large (max 5MB)' });
     }
 
-    // Generate unique filename
+    // Generate unique public_id for Cloudinary
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(2, 8);
-    const extension = fileName.split('.').pop();
-    const uniqueFileName = `${timestamp}-${randomStr}.${extension}`;
+    const publicId = `posters/${timestamp}-${randomStr}`;
 
-    // Convert base64 to buffer
-    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
-    const buffer = Buffer.from(base64Data, 'base64');
-
-    // Upload to Supabase Storage
-    const uploadResponse = await fetch(
-      `${supabaseUrl}/storage/v1/object/posters/${uniqueFileName}`,
+    // Upload to Cloudinary
+    const cloudinaryResponse = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
       {
         method: 'POST',
         headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': fileType,
-          'x-upsert': 'false'
+          'Content-Type': 'application/json'
         },
-        body: buffer
+        body: JSON.stringify({
+          file: imageBase64,
+          upload_preset: 'unsigned_posters',
+          public_id: publicId,
+          folder: 'random-dafont'
+        })
       }
     );
 
-    if (!uploadResponse.ok) {
-      const errorText = await uploadResponse.text();
-      console.error('Upload error:', errorText);
+    if (!cloudinaryResponse.ok) {
+      const errorData = await cloudinaryResponse.json();
+      console.error('Cloudinary upload error:', errorData);
       throw new Error('Failed to upload image');
     }
 
-    // Get public URL for the uploaded image
-    const imageUrl = `${supabaseUrl}/storage/v1/object/public/posters/${uniqueFileName}`;
+    const cloudinaryData = await cloudinaryResponse.json();
+    const imageUrl = cloudinaryData.secure_url;
 
     // Clean instagram handle
     let cleanInstagram = instagram ? instagram.trim() : null;
@@ -77,7 +81,7 @@ export default async function handler(req, res) {
       cleanInstagram = '@' + cleanInstagram;
     }
 
-    // Insert poster record into database
+    // Insert poster record into Supabase database
     const insertResponse = await fetch(
       `${supabaseUrl}/rest/v1/posters`,
       {
