@@ -44,10 +44,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'File too large (max 5MB)' });
     }
 
-    // Generate unique public_id for Cloudinary
+    // Generate unique public_id for Cloudinary (no slashes - folder handles path)
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(2, 8);
-    const publicId = `posters/${timestamp}-${randomStr}`;
+    const publicId = `poster-${timestamp}-${randomStr}`;
 
     // Upload to Cloudinary
     const cloudinaryResponse = await fetch(
@@ -60,8 +60,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           file: imageBase64,
           upload_preset: 'unsigned_posters',
-          public_id: publicId,
-          folder: 'random-dafont'
+          public_id: publicId
         })
       }
     );
