@@ -86,7 +86,8 @@ body {
   color: #fff;
 }
 
-.font-card:hover .download-btn {
+/* Download button on card hover - but NOT when hovering the button itself */
+.font-card:hover .download-btn:not(:hover) {
   background: transparent;
   border-color: #fff;
   color: #fff;
@@ -168,10 +169,11 @@ body {
   pointer-events: auto;
 }
 
-.download-btn:hover {
-  background: #c00;
-  color: #fff;
-  border-color: #c00;
+.download-btn:hover,
+.font-card .download-btn:hover {
+  background: #c00 !important;
+  color: #fff !important;
+  border-color: #c00 !important;
 }
 
 /* Skeleton Loading - Simplified */
