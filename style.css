@@ -527,40 +527,104 @@ body {
   padding: 80px 40px 60px;
 }
 
-.poster-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  padding: 0;
-}
-
-.poster-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #222;
-}
-
-.btn-submit-poster {
-  padding: 12px 24px;
-  background: #c00;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-family: "Arial Narrow", Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-submit-poster:hover {
-  background: #a00;
-}
 
 .poster-gallery {
   padding: 0;
   font-size: 0;
+  text-align: center;
+}
+
+/* Info Card - First card in poster gallery */
+.info-card {
+  display: inline-block;
+  vertical-align: top;
+  width: 330px;
+  height: 450px;
+  background: #c00;
+  border-radius: 16px;
+  transform: rotate(-3deg);
+  margin-right: 18px;
+  margin-bottom: 18px;
+  padding: 40px 35px;
+  text-align: left;
+  transition: box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.info-card:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.info-text-italic {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.info-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  margin: 25px 0;
+}
+
+.info-cta {
+  display: block;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 38px;
+  font-weight: 400;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+  padding: 8px 0;
+  text-align: center;
+}
+
+.info-cta:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.info-rules {
+  display: block;
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 18px;
+  color: #fff;
+  text-decoration: underline;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.info-rules:hover {
+  text-decoration: none;
+}
+
+.info-author {
+  font-family: "Arial Narrow", Arial, sans-serif;
+  font-size: 18px;
+  color: #fff;
+  margin-top: auto;
+  position: absolute;
+  bottom: 40px;
+  left: 35px;
+}
+
+.info-author a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.info-author a:hover {
+  text-decoration: underline;
+}
+
+.info-card {
+  position: relative;
 }
 
 .poster-card {
@@ -619,19 +683,27 @@ body {
     padding: 60px 40px 40px;
   }
 
-  .poster-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-    padding: 0;
-  }
-
-  .poster-title {
-    font-size: 22px;
-  }
-
   .poster-gallery {
     padding: 0;
+  }
+
+  .info-card {
+    width: 280px;
+    height: 400px;
+    padding: 30px 25px;
+  }
+
+  .info-text-italic {
+    font-size: 18px;
+  }
+
+  .info-cta {
+    font-size: 28px;
+  }
+
+  .info-author {
+    bottom: 30px;
+    left: 25px;
   }
 
   .poster-card {
