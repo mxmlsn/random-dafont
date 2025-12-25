@@ -561,7 +561,7 @@ body {
 .poster-gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 18px;
   padding: 0 24px;
 }
 
@@ -570,6 +570,7 @@ body {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
 }
 
 .poster-image-container {
@@ -638,7 +639,7 @@ body {
   }
 
   .poster-gallery {
-    gap: 16px;
+    gap: 18px;
     padding: 0 16px;
   }
 
