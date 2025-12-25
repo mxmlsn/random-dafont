@@ -522,9 +522,9 @@ body {
    ============================================ */
 
 .poster-section {
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 80px 0 60px;
+  padding: 80px 40px 60px;
 }
 
 .poster-header {
@@ -532,7 +532,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
-  padding: 0 24px;
+  padding: 0;
 }
 
 .poster-title {
@@ -559,7 +559,7 @@ body {
 }
 
 .poster-gallery {
-  padding: 0 24px;
+  padding: 0;
   font-size: 0;
 }
 
@@ -616,14 +616,14 @@ body {
 /* Poster Gallery Responsive */
 @media (max-width: 768px) {
   .poster-section {
-    padding: 60px 0 40px;
+    padding: 60px 40px 40px;
   }
 
   .poster-header {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
-    padding: 0 16px;
+    padding: 0;
   }
 
   .poster-title {
@@ -631,7 +631,7 @@ body {
   }
 
   .poster-gallery {
-    padding: 0 16px;
+    padding: 0;
   }
 
   .poster-card {
