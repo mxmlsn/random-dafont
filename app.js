@@ -837,4 +837,15 @@ document.addEventListener('DOMContentLoaded', () => {
       navigateLightbox('next');
     }
   });
+
+  // Info card parallax scroll effect
+  const infoCard = document.querySelector('.info-card');
+  if (infoCard) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const maxScroll = 40;
+      const offset = Math.min(scrollY * 0.1, maxScroll);
+      infoCard.style.transform = `rotate(-2deg) translateY(${offset}px)`;
+    });
+  }
 });
