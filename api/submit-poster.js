@@ -7,6 +7,7 @@ export default async function handler(req, res) {
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY; // For bypassing RLS to get poster ID
   const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
   const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
@@ -82,14 +83,16 @@ export default async function handler(req, res) {
       cleanInstagram = '@' + cleanInstagram;
     }
 
-    // Insert poster record into Supabase database and get the ID
+    // Insert poster record into Supabase database
+    // Use service key if available (bypasses RLS), otherwise use anon key
+    const insertKey = supabaseServiceKey || supabaseKey;
     const insertResponse = await fetch(
       `${supabaseUrl}/rest/v1/posters`,
       {
         method: 'POST',
         headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': insertKey,
+          'Authorization': `Bearer ${insertKey}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
