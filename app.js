@@ -485,8 +485,8 @@ let awaitingAnonConfirmation = false;
 function initPosterGallery() {
   const submitPosterBtn = document.getElementById('submitPosterBtn');
   const modal = document.getElementById('submitModal');
-  const modalClose = document.getElementById('modalClose');
   const modalBackdrop = modal.querySelector('.modal-backdrop');
+  const modalAnonMessage = document.getElementById('modalAnonMessage');
   const posterForm = document.getElementById('posterForm');
   const fileInput = document.getElementById('posterImage');
   const fileUpload = document.getElementById('fileUpload');
@@ -510,13 +510,19 @@ function initPosterGallery() {
     resetForm();
   }
 
-  modalClose.addEventListener('click', closeModal);
   modalBackdrop.addEventListener('click', closeModal);
 
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('active')) {
       closeModal();
+    }
+  });
+
+  // Prevent Enter from submitting the form
+  posterForm.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   });
 
@@ -538,14 +544,17 @@ function initPosterGallery() {
       return;
     }
 
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB.');
+    // Validate file size (3MB)
+    if (file.size > 3 * 1024 * 1024) {
+      alert('Image must be less than 3MB.');
       fileInput.value = '';
       return;
     }
 
     selectedFile = file;
+
+    // Enable submit button
+    submitBtn.disabled = false;
 
     // Show preview
     const reader = new FileReader();
@@ -570,6 +579,7 @@ function initPosterGallery() {
     previewImg.src = '';
     filePreview.style.display = 'none';
     fileUploadContent.style.display = 'block';
+    submitBtn.disabled = true;
   }
 
   // Form submission
@@ -587,21 +597,23 @@ function initPosterGallery() {
       instagram = instagram.substring(1);
     }
 
-    const anonMessage = document.getElementById('anonMessage');
-    const instagramInput = document.getElementById('instagram');
+    const instagramWrapper = document.querySelector('.instagram-input-wrapper');
 
     // Check if Instagram is empty and awaiting confirmation
     if (!instagram && !awaitingAnonConfirmation) {
       // Show anonymous confirmation
-      anonMessage.style.display = 'inline';
-      instagramInput.classList.add('highlight-green');
+      modalAnonMessage.classList.add('visible');
+      instagramWrapper.classList.add('highlight-green');
+      submitBtn.classList.add('highlight-green');
       submitBtn.querySelector('.btn-text').textContent = 'yes';
       awaitingAnonConfirmation = true;
 
-      // Remove green highlight after 2 seconds
+      // Remove green highlight after 5 seconds
       setTimeout(() => {
-        instagramInput.classList.remove('highlight-green');
-      }, 2000);
+        modalAnonMessage.classList.remove('visible');
+        instagramWrapper.classList.remove('highlight-green');
+        submitBtn.classList.remove('highlight-green');
+      }, 5000);
 
       return;
     }
@@ -671,15 +683,16 @@ function initPosterGallery() {
     clearFileSelection();
     posterForm.style.display = 'flex';
     submitSuccess.style.display = 'none';
-    submitBtn.disabled = false;
+    submitBtn.disabled = true;
     submitBtn.querySelector('.btn-text').style.display = 'inline';
-    submitBtn.querySelector('.btn-text').textContent = 'Submit';
+    submitBtn.querySelector('.btn-text').textContent = 'submit';
     submitBtn.querySelector('.btn-loading').style.display = 'none';
 
     // Reset anonymous confirmation state
     awaitingAnonConfirmation = false;
-    document.getElementById('anonMessage').style.display = 'none';
-    document.getElementById('instagram').classList.remove('highlight-green');
+    modalAnonMessage.classList.remove('visible');
+    document.querySelector('.instagram-input-wrapper').classList.remove('highlight-green');
+    submitBtn.classList.remove('highlight-green');
 
     // Reset font inputs to single empty field
     resetFontInputs();
@@ -700,10 +713,38 @@ function initFontInputs() {
   fontInputsContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('btn-add-font')) {
       addFontInput();
-    } else if (e.target.classList.contains('btn-remove-font')) {
-      removeFontInput(e.target);
     }
   });
+
+  // Auto-resize font inputs on typing
+  fontInputsContainer.addEventListener('input', (e) => {
+    if (e.target.classList.contains('font-name-input')) {
+      autoResizeFontInput(e.target);
+    }
+  });
+
+  // Initial resize for any existing inputs
+  document.querySelectorAll('.font-name-input').forEach(autoResizeFontInput);
+}
+
+function autoResizeFontInput(input) {
+  // Create a temporary span to measure text width
+  const span = document.createElement('span');
+  span.style.visibility = 'hidden';
+  span.style.position = 'absolute';
+  span.style.whiteSpace = 'pre';
+  span.style.font = window.getComputedStyle(input).font;
+  span.textContent = input.value || input.placeholder;
+  document.body.appendChild(span);
+
+  const textWidth = span.offsetWidth;
+  document.body.removeChild(span);
+
+  // Set minimum width and add padding (12px each side)
+  const minWidth = 85;
+  const maxWidth = 300;
+  const newWidth = Math.min(Math.max(textWidth + 24, minWidth), maxWidth);
+  input.style.width = newWidth + 'px';
 }
 
 function addFontInput() {
@@ -714,82 +755,46 @@ function addFontInput() {
     return; // Max 10 font inputs
   }
 
+  // Check if the last input has text - can't add new until previous is filled
+  const lastRow = currentRows[currentRows.length - 1];
+  const lastInput = lastRow.querySelector('.font-name-input');
+  if (!lastInput.value.trim()) {
+    lastInput.focus();
+    return; // Can't add new font until current one has text
+  }
+
+  // Remove the add button from the current last row
+  const addBtn = lastRow.querySelector('.btn-add-font');
+  if (addBtn) {
+    addBtn.remove();
+  }
+
   const newRow = document.createElement('div');
   newRow.className = 'font-input-row';
   newRow.innerHTML = `
-    <input type="text" class="font-name-input" placeholder="Font name" maxlength="50">
-    <button type="button" class="btn-remove-font" title="Remove font">−</button>
+    <input type="text" class="font-name-input" placeholder="font name" maxlength="50">
+    <button type="button" class="btn-add-font" title="add another font">+</button>
   `;
 
   fontInputsContainer.appendChild(newRow);
 
-  // Update add button state
-  updateAddButtonState();
+  // Auto-resize the new input
+  const newInput = newRow.querySelector('.font-name-input');
+  autoResizeFontInput(newInput);
+  newInput.focus();
 }
 
-function removeFontInput(removeBtn) {
-  const fontInputsContainer = document.getElementById('fontInputs');
-  const row = removeBtn.closest('.font-input-row');
-  const currentRows = fontInputsContainer.querySelectorAll('.font-input-row');
-
-  // Keep at least one row
-  if (currentRows.length > 1) {
-    row.remove();
-    updateAddButtonState();
-  }
-}
 
 function resetFontInputs() {
   const fontInputsContainer = document.getElementById('fontInputs');
   fontInputsContainer.innerHTML = `
     <div class="font-input-row">
-      <input type="text" class="font-name-input" placeholder="Font name" maxlength="50">
-      <button type="button" class="btn-add-font" title="Add another font">+</button>
+      <input type="text" class="font-name-input" placeholder="font name" maxlength="50">
+      <button type="button" class="btn-add-font" title="add another font">+</button>
     </div>
   `;
 }
 
-function updateAddButtonState() {
-  const fontInputsContainer = document.getElementById('fontInputs');
-  const currentRows = fontInputsContainer.querySelectorAll('.font-input-row');
-
-  // Remove all add buttons first
-  currentRows.forEach(row => {
-    const addBtn = row.querySelector('.btn-add-font');
-    if (addBtn) {
-      addBtn.remove();
-    }
-  });
-
-  // Add the add button to the last row if we haven't reached the limit
-  if (currentRows.length < 10) {
-    const lastRow = currentRows[currentRows.length - 1];
-    const removeBtn = lastRow.querySelector('.btn-remove-font');
-
-    if (!removeBtn) {
-      // First row - add the add button
-      const addBtn = document.createElement('button');
-      addBtn.type = 'button';
-      addBtn.className = 'btn-add-font';
-      addBtn.title = 'Add another font';
-      addBtn.textContent = '+';
-      lastRow.appendChild(addBtn);
-    }
-  }
-
-  // Ensure first row always has add button if it's the only row
-  if (currentRows.length === 1) {
-    const firstRow = currentRows[0];
-    if (!firstRow.querySelector('.btn-add-font')) {
-      const addBtn = document.createElement('button');
-      addBtn.type = 'button';
-      addBtn.className = 'btn-add-font';
-      addBtn.title = 'Add another font';
-      addBtn.textContent = '+';
-      firstRow.appendChild(addBtn);
-    }
-  }
-}
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
