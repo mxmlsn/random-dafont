@@ -915,11 +915,12 @@ function updateLightboxContent() {
   const lightboxInstagram = document.getElementById('lightboxInstagram');
   const lightboxFonts = document.getElementById('lightboxFonts');
   const lightboxSvgBadge = document.getElementById('lightboxSvgBadge');
+  const lightboxDate = document.getElementById('lightboxDate');
 
   lightboxImage.src = poster.image_url;
   lightboxImage.alt = poster.instagram ? `Poster by @${poster.instagram}` : 'Anonymous poster';
 
-  // Instagram
+  // Instagram (clickable nickname)
   if (poster.instagram) {
     lightboxInstagram.textContent = `@${poster.instagram}`;
     lightboxInstagram.href = `https://instagram.com/${poster.instagram}`;
@@ -928,7 +929,7 @@ function updateLightboxContent() {
     lightboxInstagram.style.display = 'none';
   }
 
-  // Fonts
+  // Fonts (line by line)
   if (poster.fonts && poster.fonts.length > 0) {
     lightboxFonts.innerHTML = poster.fonts
       .map(font => `<div class="lightbox-font-item">${escapeHtml(font)}</div>`)
@@ -938,11 +939,25 @@ function updateLightboxContent() {
     lightboxFonts.style.display = 'none';
   }
 
-  // SVG badge
+  // SVG badge (clickable link to random-svg.com)
   if (poster.used_svg) {
+    lightboxSvgBadge.innerHTML = 'include assets from <a href="https://random-svg-three.vercel.app/" target="_blank" rel="noopener noreferrer">random-svg.com</a>';
     lightboxSvgBadge.style.display = 'block';
   } else {
     lightboxSvgBadge.style.display = 'none';
+  }
+
+  // Approval date (dd.mm.yyyy format)
+  if (poster.created_at) {
+    const date = new Date(poster.created_at);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}.${month}.${year}`;
+    lightboxDate.textContent = formattedDate;
+    lightboxDate.style.display = 'block';
+  } else {
+    lightboxDate.style.display = 'none';
   }
 }
 
