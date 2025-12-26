@@ -14,8 +14,9 @@ export default async function handler(req, res) {
 
   try {
     // Fetch approved posters from Supabase
+    // Show posters that are either from dafont source OR have used_fonts flag (cross-posted from svg)
     const response = await fetch(
-      `${supabaseUrl}/rest/v1/posters?status=eq.approved&order=created_at.desc&limit=50`,
+      `${supabaseUrl}/rest/v1/posters?status=eq.approved&or=(source.eq.dafont,used_fonts.eq.true)&order=created_at.desc&limit=50`,
       {
         headers: {
           'apikey': supabaseKey,

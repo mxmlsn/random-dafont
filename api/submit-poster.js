@@ -102,8 +102,10 @@ export default async function handler(req, res) {
           instagram: cleanInstagram,
           fonts: fontsArray,
           used_svg: usedSvg || false,
+          used_fonts: true, // Always true since submitted from dafont site
           image_url: imageUrl,
-          status: 'pending'
+          status: 'pending',
+          source: 'dafont'
         })
       }
     );
@@ -140,11 +142,18 @@ export default async function handler(req, res) {
 // Send poster notification to Telegram with moderation buttons
 async function sendTelegramNotification(token, chatId, posterId, instagram, fonts, usedSvg, imageUrl) {
   try {
-    const caption = `🎨 New poster submission!\n\n` +
-      (instagram ? `📷 Instagram: @${instagram}\n` : '👤 Anonymous\n') +
-      (fonts && fonts.length > 0 ? `🔤 Fonts: ${fonts.join(', ')}\n` : '') +
-      (usedSvg ? `🎨 Uses SVG from free-svg.com\n` : '') +
-      `\n🆔 ID: ${posterId}`;
+    // Line 1: source
+    const sourceLine = usedSvg ? 'dafont + svg' : 'dafont';
+
+    // Line 2: author with hyperlink (or anonymous)
+    const authorLine = instagram
+      ? `<a href="https://instagram.com/${instagram}">@${instagram}</a>`
+      : 'anonymous';
+
+    // Line 3: fonts
+    const fontsLine = fonts && fonts.length > 0 ? `\n${fonts.join(', ')}` : '';
+
+    const caption = `${sourceLine}\n${authorLine}${fontsLine}`;
 
     const keyboard = {
       inline_keyboard: [[
@@ -160,6 +169,7 @@ async function sendTelegramNotification(token, chatId, posterId, instagram, font
         chat_id: chatId,
         photo: imageUrl,
         caption: caption,
+        parse_mode: 'HTML',
         reply_markup: keyboard
       })
     });
