@@ -157,15 +157,19 @@ body {
 
 /* Main wrapper */
 .main-wrapper {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: -1 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 24px;
   padding-top: 12%;
   min-height: 35vh;
+}
+
+/* Gallery Container - the "red box" that controls overall width */
+.gallery-container {
+  position: relative;
+  width: 100%;
+  max-width: 1270px;
 }
 
 /* Gallery */
@@ -174,7 +178,6 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   width: 100%;
-  max-width: 1200px;
   position: relative;
   z-index: 1;
   margin-bottom: 72px;
@@ -369,6 +372,8 @@ body {
   z-index: 5;
 }
 
+/* Positioned relative to .gallery-container */
+
 .btn-icon {
   width: 40px;
   height: 40px;
@@ -490,6 +495,10 @@ body {
     padding: 0 16px;
     padding-top: 8vh;
     min-height: 65vh;
+  }
+
+  .gallery-container {
+    width: 100%;
   }
 
   .header {
