@@ -1063,10 +1063,11 @@ body {
   border-radius: 8px;
   transition: border-color 0.2s, background 0.2s;
   min-height: 180px;
+  background: #e5e5e5;
 }
 
 .file-upload:hover {
-  border-color: #c00;
+  border-color: #CB0200;
   background: #fef5f5;
 }
 
@@ -1098,18 +1099,20 @@ body {
   opacity: 0.5;
 }
 
-.upload-image-placeholder img {
+.upload-image-placeholder svg {
   width: 207px;
   height: auto;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, color 0.2s;
+  color: #919191;
 }
 
 .file-upload:hover .upload-image-placeholder {
   opacity: 0.7;
 }
 
-.file-upload:hover .upload-image-placeholder img {
+.file-upload:hover .upload-image-placeholder svg {
   transform: scale(1.15);
+  color: #CB0200;
 }
 
 /* Scattered Upload Labels */
@@ -1123,7 +1126,7 @@ body {
 }
 
 .file-upload:hover .upload-label {
-  color: #c00;
+  color: #CB0200;
 }
 
 .upload-label-required {
@@ -1300,8 +1303,7 @@ body {
 }
 
 .font-name-input {
-  width: auto;
-  min-width: 85px;
+  width: 110px;
   max-width: 200px;
   padding: 10px 12px;
   border: 1px solid #ddd;
@@ -1328,7 +1330,7 @@ body {
   background: transparent;
   font-size: 20px;
   font-weight: 400;
-  color: #555;
+  color: #b5b5b5;
   cursor: pointer;
   display: flex;
   align-items: center;
