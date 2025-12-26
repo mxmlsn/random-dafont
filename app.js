@@ -351,8 +351,10 @@ function updateCountButtons() {
     const count = parseInt(btn.dataset.count);
     if (count === currentCount) {
       btn.classList.add('active');
+      btn.disabled = true;
     } else {
       btn.classList.remove('active');
+      btn.disabled = false;
     }
   });
 }
@@ -444,6 +446,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Discover button
   discoverBtn.addEventListener('click', () => {
+    const icon = discoverBtn.querySelector('.refresh-icon');
+    if (icon) {
+      icon.classList.remove('spinning');
+      void icon.offsetWidth; // Force reflow
+      icon.classList.add('spinning');
+      setTimeout(() => icon.classList.remove('spinning'), 800);
+    }
     discoverFonts(currentCount);
   });
 
@@ -715,6 +724,13 @@ function initFontInputs() {
     }
   });
 
+  // Show add button when font input is focused
+  fontInputsContainer.addEventListener('focus', (e) => {
+    if (e.target.classList.contains('font-name-input')) {
+      fontInputsContainer.classList.add('show-add-btn');
+    }
+  }, true);
+
   // Auto-resize font inputs on typing
   fontInputsContainer.addEventListener('input', (e) => {
     if (e.target.classList.contains('font-name-input')) {
@@ -786,6 +802,7 @@ function addFontInput() {
 
 function resetFontInputs() {
   const fontInputsContainer = document.getElementById('fontInputs');
+  fontInputsContainer.classList.remove('show-add-btn');
   fontInputsContainer.innerHTML = `
     <div class="font-input-row">
       <input type="text" class="font-name-input" placeholder="font name" maxlength="50">

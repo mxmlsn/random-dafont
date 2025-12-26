@@ -189,7 +189,7 @@ body {
   border-radius: 16px;
   overflow: hidden;
   background: transparent;
-  border: 1px solid #C8C8C8;
+  border: 0.7px solid #C8C8C8;
   transition: background 0.15s, color 0.15s;
   cursor: pointer;
   min-height: 200px;
@@ -230,7 +230,7 @@ body {
 
 .font-info {
   padding: 8px 8px 8px 14px;
-  border-top: 1px solid #C8C8C8;
+  border-top: 0.7px solid #C8C8C8;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -271,7 +271,7 @@ body {
   height: 41px;
   border-radius: 10px;
   background: transparent;
-  border: 1px solid #C8C8C8;
+  border: 0.7px solid #C8C8C8;
   color: #bdbdbd;
   cursor: pointer;
   display: flex;
@@ -322,30 +322,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.2s;
+  transition: transform 0.2s;
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
 }
 
-.btn-refresh:hover {
-  background: #a00;
-  transform: translateX(-50%) scale(1.05);
+.btn-refresh:hover:not(:disabled) .refresh-icon {
+  transform: rotate(5deg);
 }
 
-.btn-refresh:active {
-  transform: translateX(-50%) scale(0.95);
+.refresh-icon {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+}
+
+.refresh-icon.spinning {
+  animation: spin360 0.8s ease-out forwards;
+}
+
+@keyframes spin360 {
+  from {
+    transform: rotate(5deg);
+  }
+  to {
+    transform: rotate(365deg);
+  }
 }
 
 .btn-refresh:disabled {
   background: #999;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-.btn-refresh svg {
-  flex-shrink: 0;
-  width: 29px;
-  height: 29px;
+.btn-refresh:disabled .refresh-icon {
+  opacity: 0.7;
 }
 
 /* Icon buttons (undo/redo) */
@@ -363,8 +374,8 @@ body {
   height: 40px;
   border-radius: 50%;
   background: #F4F4F4;
-  border: 1px solid #C8C8C8;
-  color: #555;
+  border: 0.7px solid #C8C8C8;
+  color: #bdbdbd;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -402,24 +413,47 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #F4F4F4;
-  border: 1px solid #C8C8C8;
-  color: #9f9f9f;
+  background: transparent;
+  border: 0.7px solid #C8C8C8;
+  color: #d5d5d5;
   cursor: pointer;
   font-family: "Arial Narrow", Arial, sans-serif;
   font-size: 15px;
   font-weight: 400;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
+  padding: 0;
 }
 
-.count-btn:hover {
-  background: #d0d0d0;
+.count-btn:hover:not(:disabled) {
+  background: #c00;
+  color: #fff;
+  border-color: #c00;
 }
 
-.count-btn.active {
-  background: #C8C8C8;
-  color: #9f9f9f;
-  border-color: #C8C8C8;
+.count-btn:hover:not(:disabled) .dot {
+  fill: #fff;
+}
+
+.count-btn:disabled {
+  cursor: default;
+}
+
+.dots-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+}
+
+.count-btn .dot {
+  fill: transparent;
+  transition: fill 0.2s;
+}
+
+.count-btn.active .dot {
+  fill: currentColor;
 }
 
 /* Empty State */
@@ -427,7 +461,7 @@ body {
   grid-column: 1 / -1;
   text-align: center;
   padding: 80px 20px;
-  color: #888;
+  color: #d5d5d5;
   font-size: 16px;
 }
 
@@ -1329,13 +1363,13 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 50%;
+  display: none;
   border: 1px solid #ddd;
   background: transparent;
   font-size: 20px;
   font-weight: 400;
   color: #b5b5b5;
   cursor: pointer;
-  display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
@@ -1351,6 +1385,10 @@ body {
 .btn-add-font:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+.font-inputs.show-add-btn .btn-add-font {
+  display: flex;
 }
 
 /* Checkbox */
