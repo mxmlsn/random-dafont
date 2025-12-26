@@ -401,7 +401,7 @@ body {
   border-radius: 50%;
   background: #f5f5f5;
   border: 1px solid #CECECE;
-  color: #555;
+  color: #9f9f9f;
   cursor: pointer;
   font-family: "Arial Narrow", Arial, sans-serif;
   font-size: 15px;
@@ -410,12 +410,12 @@ body {
 }
 
 .count-btn:hover {
-  background: #f5f5f5;
+  background: #d0d0d0;
 }
 
 .count-btn.active {
   background: #CECECE;
-  color: #333;
+  color: #9f9f9f;
   border-color: #CECECE;
 }
 
@@ -764,7 +764,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 .lightbox-content {
@@ -853,17 +855,15 @@ body {
   bottom: 15px;
   left: 15px;
   transform: none;
-  background: rgba(255, 255, 255, 0.75);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: #ffffff00;
   padding: 8px;
   border-radius: 3px;
   width: 192px;
   min-height: 56px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  z-index: 10;
+  gap: 4px;
+  z-index: 2001;
   font-family: "Arial Narrow", Arial, sans-serif;
   font-size: 14px;
   line-height: 1.3;
@@ -875,11 +875,12 @@ body {
 
 .lightbox-instagram {
   font-size: 14px;
-  color: #333;
+  color: #d6d6d6;
   text-decoration: none;
   transition: color 0.2s;
   word-break: break-word;
   font-weight: 400;
+  white-space: pre;
 }
 
 .lightbox-instagram:hover {
@@ -889,7 +890,7 @@ body {
 
 .lightbox-fonts {
   font-size: 14px;
-  color: #333;
+  color: #d6d6d6;
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -897,29 +898,30 @@ body {
 
 .lightbox-font-item {
   line-height: 1.3;
+  white-space: pre;
 }
 
 .lightbox-svg-badge {
   font-size: 14px;
-  color: #333;
+  color: #d6d6d6;
   font-style: normal;
 }
 
 .lightbox-svg-badge a {
-  color: #333;
-  text-decoration: none;
+  color: #d6d6d6;
+  text-decoration: underline;
   transition: color 0.2s;
+  white-space: pre-line;
 }
 
 .lightbox-svg-badge a:hover {
   color: #c00;
-  text-decoration: underline;
 }
 
 .lightbox-date {
   font-size: 14px;
-  color: #666;
-  margin-top: 4px;
+  color: #d6d6d6;
+  margin-top: 8px;
 }
 
 @media (max-width: 768px) {

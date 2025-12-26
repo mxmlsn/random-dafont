@@ -920,28 +920,35 @@ function updateLightboxContent() {
   lightboxImage.src = poster.image_url;
   lightboxImage.alt = poster.instagram ? `Poster by @${poster.instagram}` : 'Anonymous poster';
 
-  // Instagram (clickable nickname)
+  // Instagram (with "author:" label and tab indentation)
   if (poster.instagram) {
-    lightboxInstagram.textContent = `@${poster.instagram}`;
+    lightboxInstagram.textContent = `author:\t@${poster.instagram}`;
     lightboxInstagram.href = `https://instagram.com/${poster.instagram}`;
     lightboxInstagram.style.display = 'block';
   } else {
     lightboxInstagram.style.display = 'none';
   }
 
-  // Fonts (line by line)
+  // Fonts (with "fonts:" label and tab indentation)
   if (poster.fonts && poster.fonts.length > 0) {
-    lightboxFonts.innerHTML = poster.fonts
-      .map(font => `<div class="lightbox-font-item">${escapeHtml(font)}</div>`)
+    const fontsHTML = poster.fonts
+      .map((font, index) => {
+        if (index === 0) {
+          return `<div class="lightbox-font-item">fonts:\t${escapeHtml(font)}</div>`;
+        } else {
+          return `<div class="lightbox-font-item">\t\t${escapeHtml(font)}</div>`;
+        }
+      })
       .join('');
+    lightboxFonts.innerHTML = fontsHTML;
     lightboxFonts.style.display = 'flex';
   } else {
     lightboxFonts.style.display = 'none';
   }
 
-  // SVG badge (clickable link to random-svg.com)
+  // SVG badge (entire text is clickable link with line break after "random")
   if (poster.used_svg) {
-    lightboxSvgBadge.innerHTML = 'include assets from <a href="https://random-svg-three.vercel.app/" target="_blank" rel="noopener noreferrer">random-svg.com</a>';
+    lightboxSvgBadge.innerHTML = '<a href="https://random-svg-three.vercel.app/" target="_blank" rel="noopener noreferrer">include assets from\nrandom-svg.com</a>';
     lightboxSvgBadge.style.display = 'block';
   } else {
     lightboxSvgBadge.style.display = 'none';
