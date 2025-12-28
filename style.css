@@ -514,6 +514,7 @@ body {
   .logo {
     font-size: 24px;
     height: 70px;
+    gap: 3px;
   }
 
   .logo-random {
@@ -747,26 +748,43 @@ body {
 /* Poster Gallery Responsive */
 @media (max-width: 768px) {
   .poster-section {
-    padding: 60px 40px 40px;
+    padding: 60px 16px 40px;
   }
 
   .poster-gallery {
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .info-card {
-    width: 224px;
-    height: 320px;
-    padding: 24px 20px;
-    margin-top: -60px;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 16px;
+    transform: none;
+    border-radius: 16px;
+  }
+
+  .info-card:hover {
+    transform: none;
+  }
+
+  .info-card .info-text-italic:nth-child(2) {
+    display: none;
   }
 
   .info-text-italic {
     font-size: 14px;
+    margin-bottom: 12px;
   }
 
   .info-cta {
-    font-size: 22px;
+    font-size: 18px;
+    padding: 16px 0;
   }
 
   .info-rules {
@@ -774,19 +792,49 @@ body {
   }
 
   .info-author {
-    bottom: 24px;
-    left: 20px;
+    position: static;
+    margin-top: 12px;
     font-size: 12px;
   }
 
+  /* Mobile Instagram card */
+  .mobile-instagram-card {
+    display: block;
+    width: 100%;
+    background: #f4f4f4;
+    border: 0.7px solid #C8C8C8;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .mobile-instagram-card a {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-size: 14px;
+    color: #888;
+    text-decoration: underline;
+  }
+
+  .mobile-instagram-card a:hover {
+    color: #c00;
+  }
+
   .poster-card {
-    margin-right: 16px;
+    margin-right: 0;
     margin-bottom: 16px;
+    width: 100%;
   }
 
   .poster-image {
-    height: 280px;
+    height: auto;
+    width: 100%;
   }
+}
+
+/* Hide mobile instagram card on desktop */
+.mobile-instagram-card {
+  display: none;
 }
 
 /* ============================================
