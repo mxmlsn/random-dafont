@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const receivedToken = req.headers['x-telegram-bot-api-secret-token'];
     if (receivedToken !== webhookSecret) {
       console.error('Invalid webhook secret token');
-      return res.status(403).json({ error: 'Forbidden' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
   }
 
