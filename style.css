@@ -514,7 +514,7 @@ body {
   .logo {
     font-size: 24px;
     height: auto;
-    gap: 3px;
+    gap: 0;
   }
 
   .logo-random {
@@ -524,7 +524,7 @@ body {
 
   .logo-dafont {
     font-size: 28px;
-    height: auto;
+    height: 18px;
     line-height: 1;
   }
 
@@ -806,7 +806,7 @@ body {
 
   /* Mobile Instagram card */
   .mobile-instagram-card {
-    display: block;
+    display: block !important;
     width: 100%;
     background: #c00;
     border: none;
@@ -814,6 +814,7 @@ body {
     padding: 16px 20px;
     margin-bottom: 24px;
     text-align: left;
+    font-size: 14px;
   }
 
   .mobile-instagram-card a {
