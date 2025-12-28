@@ -1,5 +1,11 @@
 /* Font Faces */
 @font-face {
+  font-family: 'Arial Narrow';
+  src: url('Arial Narrow.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Ellis';
   src: url('ELLIS___.TTF') format('truetype');
   font-display: swap;
@@ -524,7 +530,7 @@ body {
 
   .logo-dafont {
     font-size: 28px;
-    height: 18px;
+    height: 9px;
     line-height: 1;
   }
 
@@ -532,6 +538,10 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     margin-bottom: 60px;
+  }
+
+  .gallery .font-card:first-child {
+    margin-top: 18px;
   }
 
   .gallery.grid-6 {
@@ -815,6 +825,15 @@ body {
     margin-bottom: 24px;
     text-align: left;
     font-size: 14px;
+    order: 1;
+  }
+
+  .info-card {
+    order: 0;
+  }
+
+  .poster-card {
+    order: 2;
   }
 
   .mobile-instagram-card a {
