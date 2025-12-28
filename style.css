@@ -513,17 +513,19 @@ body {
 
   .logo {
     font-size: 24px;
-    height: 60px;
-    gap: 1px;
+    height: auto;
+    gap: 3px;
   }
 
   .logo-random {
-    height: 32px;
+    height: auto;
+    line-height: 1;
   }
 
   .logo-dafont {
     font-size: 28px;
-    height: 32px;
+    height: auto;
+    line-height: 1;
   }
 
   .gallery {
@@ -745,6 +747,11 @@ body {
   font-size: 16px;
 }
 
+/* Hide mobile instagram card on desktop */
+.mobile-instagram-card {
+  display: none;
+}
+
 /* Poster Gallery Responsive */
 @media (max-width: 768px) {
   .poster-section {
@@ -830,11 +837,6 @@ body {
     height: auto;
     width: 100%;
   }
-}
-
-/* Hide mobile instagram card on desktop */
-.mobile-instagram-card {
-  display: none;
 }
 
 /* ============================================
