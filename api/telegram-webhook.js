@@ -7,9 +7,19 @@ export default async function handler(req, res) {
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY; // Service key for admin operations
+  const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
 
   if (!telegramToken || !supabaseUrl || !supabaseKey) {
     return res.status(500).json({ error: 'Server not configured' });
+  }
+
+  // Verify Telegram secret token if configured
+  if (webhookSecret) {
+    const receivedToken = req.headers['x-telegram-bot-api-secret-token'];
+    if (receivedToken !== webhookSecret) {
+      console.error('Invalid webhook secret token');
+      return res.status(403).json({ error: 'Forbidden' });
+    }
   }
 
   try {
