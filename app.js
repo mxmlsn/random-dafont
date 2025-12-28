@@ -861,10 +861,13 @@ async function loadPosters() {
       </div>
     `).join('');
 
-    // Remove old poster cards but keep info card
+    // Remove old poster cards but keep info card and mobile instagram card
     gallery.querySelectorAll('.poster-card').forEach(card => card.remove());
-    // Add new posters after info card
-    if (infoCard) {
+    // Add new posters after mobile-instagram-card (or after info card if not found)
+    const mobileInstagramCard = gallery.querySelector('.mobile-instagram-card');
+    if (mobileInstagramCard) {
+      mobileInstagramCard.insertAdjacentHTML('afterend', postersHtml);
+    } else if (infoCard) {
       infoCard.insertAdjacentHTML('afterend', postersHtml);
     } else {
       gallery.innerHTML = postersHtml;
