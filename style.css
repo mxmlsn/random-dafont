@@ -513,8 +513,8 @@ body {
 
   .logo {
     font-size: 24px;
-    height: 70px;
-    gap: 3px;
+    height: 60px;
+    gap: 1px;
   }
 
   .logo-random {
@@ -801,8 +801,8 @@ body {
   .mobile-instagram-card {
     display: block;
     width: 100%;
-    background: #f4f4f4;
-    border: 0.7px solid #C8C8C8;
+    background: #c00;
+    border: none;
     border-radius: 16px;
     padding: 16px 20px;
     margin-bottom: 24px;
@@ -812,12 +812,12 @@ body {
   .mobile-instagram-card a {
     font-family: "Arial Narrow", Arial, sans-serif;
     font-size: 14px;
-    color: #888;
+    color: #fff;
     text-decoration: underline;
   }
 
   .mobile-instagram-card a:hover {
-    color: #c00;
+    color: #fff;
   }
 
   .poster-card {
