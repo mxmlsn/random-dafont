@@ -512,13 +512,11 @@ function showPreviewOverlay(imageSrc) {
 
   overlayImg.src = imageSrc;
   overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
 }
 
 function closePreviewOverlay() {
   const overlay = document.getElementById('previewOverlay');
   overlay.classList.remove('active');
-  document.body.style.overflow = '';
 }
 
 // Preview overlay is controlled by hover - no click/keyboard handlers needed
