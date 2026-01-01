@@ -319,11 +319,14 @@ function renderGallery(fonts, totalCount) {
     // Prevent download button click from bubbling to card
     card.querySelector('.btn-download').onclick = (e) => e.stopPropagation();
 
-    // Magnify button - show preview overlay
-    card.querySelector('.btn-magnify').onclick = (e) => {
-      e.stopPropagation();
+    // Magnify button - show preview overlay on hover
+    const magnifyBtn = card.querySelector('.btn-magnify');
+    magnifyBtn.addEventListener('mouseenter', () => {
       showPreviewOverlay(previewSrc);
-    };
+    });
+    magnifyBtn.addEventListener('mouseleave', () => {
+      closePreviewOverlay();
+    });
 
     // Replace skeleton at this index
     if (existingCards[index]) {
@@ -518,20 +521,7 @@ function closePreviewOverlay() {
   document.body.style.overflow = '';
 }
 
-// Initialize preview overlay listeners
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('previewOverlay');
-
-  // Close on click anywhere
-  overlay.addEventListener('click', closePreviewOverlay);
-
-  // Close on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) {
-      closePreviewOverlay();
-    }
-  });
-});
+// Preview overlay is controlled by hover - no click/keyboard handlers needed
 
 // ============================================
 // POSTER GALLERY
