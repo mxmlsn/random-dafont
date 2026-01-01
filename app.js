@@ -1005,7 +1005,7 @@ function updateLightboxContent() {
 
   // SVG badge (entire text is clickable link with line break after "random")
   if (poster.used_svg) {
-    lightboxSvgBadge.innerHTML = '<a href="https://random-svg-three.vercel.app/" target="_blank" rel="noopener noreferrer">include assets from\nrandom-svg.com</a>';
+    lightboxSvgBadge.innerHTML = '<a href="https://random-svg.com/" target="_blank" rel="noopener noreferrer">include assets from\nrandom-svg.com</a>';
     lightboxSvgBadge.style.display = 'block';
   } else {
     lightboxSvgBadge.style.display = 'none';
