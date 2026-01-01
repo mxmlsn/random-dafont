@@ -221,6 +221,92 @@ body {
   background: transparent;
   cursor: pointer;
   transition: background 0.15s;
+  position: relative;
+}
+
+/* Magnifier icon */
+.btn-magnify {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, transform 0.15s;
+  z-index: 5;
+}
+
+.font-card:hover .btn-magnify {
+  opacity: 1;
+}
+
+.btn-magnify:hover {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+.btn-magnify svg {
+  width: 16px;
+  height: 16px;
+  color: #666;
+}
+
+.btn-magnify:hover svg {
+  color: #c00;
+}
+
+/* Preview overlay */
+.preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.preview-overlay.active {
+  display: flex;
+}
+
+.preview-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.preview-overlay-image {
+  position: relative;
+  width: 70%;
+  max-width: 70vw;
+  height: 800px;
+  max-height: 80vh;
+  overflow: hidden;
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.preview-overlay-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  object-position: left top;
 }
 
 .font-card:hover .font-preview-container {
@@ -331,16 +417,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
   z-index: 10;
 }
 
+.btn-refresh:hover:not(:disabled) {
+  transform: translateX(-50%) scale(1.15);
+}
+
 .btn-refresh:hover:not(:disabled) .refresh-icon {
-  transform: rotate(5deg);
+  transform: rotate(-180deg);
 }
 
 .refresh-icon {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
   flex-shrink: 0;
   width: 62px;
   height: 62px;

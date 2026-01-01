@@ -286,6 +286,12 @@ function renderGallery(fonts, totalCount) {
 
     card.innerHTML = `
       <div class="font-preview-container">
+        <button class="btn-magnify" title="Preview font">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
         <img class="font-preview" src="${previewSrc}" alt="${font.name}">
       </div>
       <div class="font-info">
@@ -303,11 +309,21 @@ function renderGallery(fonts, totalCount) {
     `;
 
     // Click handlers - separate for preview and details
-    card.querySelector('.font-preview-container').onclick = () => window.open(font.url, '_blank');
+    card.querySelector('.font-preview-container').onclick = (e) => {
+      // Don't open font page if clicking magnifier
+      if (e.target.closest('.btn-magnify')) return;
+      window.open(font.url, '_blank');
+    };
     card.querySelector('.font-details').onclick = () => window.open(font.url, '_blank');
 
     // Prevent download button click from bubbling to card
     card.querySelector('.btn-download').onclick = (e) => e.stopPropagation();
+
+    // Magnify button - show preview overlay
+    card.querySelector('.btn-magnify').onclick = (e) => {
+      e.stopPropagation();
+      showPreviewOverlay(previewSrc);
+    };
 
     // Replace skeleton at this index
     if (existingCards[index]) {
@@ -481,6 +497,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize poster gallery
   initPosterGallery();
+});
+
+// ============================================
+// FONT PREVIEW OVERLAY
+// ============================================
+
+function showPreviewOverlay(imageSrc) {
+  const overlay = document.getElementById('previewOverlay');
+  const overlayImg = document.getElementById('previewOverlayImg');
+
+  overlayImg.src = imageSrc;
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreviewOverlay() {
+  const overlay = document.getElementById('previewOverlay');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Initialize preview overlay listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('previewOverlay');
+
+  // Close on click anywhere
+  overlay.addEventListener('click', closePreviewOverlay);
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closePreviewOverlay();
+    }
+  });
 });
 
 // ============================================
